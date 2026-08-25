@@ -2256,6 +2256,8 @@ function renderResult() {
 
 function renderSetting() {
   let h = '<div class="card"><h3>ตั้งค่าระบบเคมี ม.4</h3>' +
+    '<div class="row" style="margin-bottom:15px; display:block"><label><b>🔗 API Endpoint (Google Web App URL):</b></label><br>' +
+    '<input type="text" id="setApi" style="width:100%; padding:8px; margin-top:5px;" placeholder="https://script.google.com/..." value="' + esc(DB.settings.api || '') + '"></div>' +
     '<div class="row"><label class="hint">เกณฑ์คะแนนผ่าน (%):</label>' +
     '<input type="number" id="setpass" min="0" max="100" value="' + DB.settings.passPct + '" style="width:90px"></div>' +
     '<div class="row" style="margin-top:14px"><button id="btnBk">สำรองข้อมูล JSON</button>' +
