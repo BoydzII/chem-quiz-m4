@@ -645,9 +645,9 @@ function choiceWhyHTML(p) {
   return '<div class="whylist">' + (p.choices || []).map((c, k) =>
     '<div class="whyrow ' + (c.correct ? 'ok' : 'no') + '">' +
     '<span class="wk">' + 'กขคง'[k] + '.</span>' +
-    '<span class="wt">' + M(c.text) + '</span>' +
+    '<span class="wt">' + c.text + '</span>' +
     '<span class="wm">' + (c.correct ? '✓ ถูก' : '✗ ผิด') + '</span>' +
-    (c.why ? '<div class="wd">' + M(c.why) + '</div>' : '') + '</div>').join('') + '</div>';
+    (c.why ? '<div class="wd">' + c.why + '</div>' : '') + '</div>').join('') + '</div>';
 }
 
 function solutionHTML(p, open) {
@@ -710,14 +710,15 @@ function ok2(){ for (const v of arguments) { if (!isFinite(v) || dpOf(v, 4) > 2)
    ---------------------------------------------------------------------------- */
 
 function buildBank(topic, sub, items) {
+  const parse = s => (s || '').replace(/`([^`]+)`/g, (m, a) => M(a));
   items.forEach((it, i) => {
     TQ({
       id: 'tq-' + topic + '-' + i, topic: topic, sub: sub, skills: [sub],
       gen(R) {
         return {
-          stem: it.q,
-          choices: [ C(it.c, it.cw), X(it.w1, it.w1w), X(it.w2, it.w2w), X(it.w3, it.w3w) ],
-          idea: it.idea, why: it.why
+          stem: parse(it.q),
+          choices: [ C(parse(it.c), parse(it.cw)), X(parse(it.w1), parse(it.w1w)), X(parse(it.w2), parse(it.w2w)), X(parse(it.w3), parse(it.w3w)) ],
+          idea: parse(it.idea), why: parse(it.why)
         };
       }
     });
@@ -1435,7 +1436,7 @@ function renderDo() {
       if (it.checked) { if (ch.correct) cls += ' ok'; else if (it.pick === k) cls += ' bad'; }
       h += '<button class="' + cls + '" data-pick="' + k + '"' + (it.checked ? ' disabled' : '') + '>' +
         '<span class="k">' + 'กขคง'[k] + '.</span><span>' +
-        (p.theory ? M(ch.text) : M(fmt(ch.value) + (p.finds[0].unit ? ' `' + p.finds[0].unit + '`' : ''))) +
+        (p.theory ? ch.text : M(fmt(ch.value) + (p.finds[0].unit ? ' `' + p.finds[0].unit + '`' : ''))) +
         '</span></button>';
     });
     h += '</div>';
