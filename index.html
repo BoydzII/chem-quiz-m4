@@ -190,6 +190,22 @@ input.numin.bad{border-color:var(--bad);background:var(--bad-bg)}
 .fxrow{border-left:3px solid var(--brand);padding:2px 0 2px 11px}
 .fxrow .fxe{font-size:16px}
 .fxrow .fxd{font-size:13px;color:var(--muted);line-height:1.55;margin-top:2px}
+
+  /* PRINT STYLES */
+  @media print {
+    body { background: #fff; color: #000; padding: 0; margin: 0; }
+    .nav, #whoBar, .floatbtm, .btn-print, .btn-assign, .card:not(.qbox) { display: none !important; }
+    #main { max-width: 100%; padding: 0; margin: 0; box-shadow: none; border-radius: 0; min-height: auto; }
+    .qbox { page-break-inside: avoid; border: none !important; border-bottom: 1px solid #ddd !important; margin: 0 0 15px 0 !important; padding: 0 0 15px 0 !important; border-radius: 0 !important; background: none !important; }
+    .qhead { background: none; border-bottom: 1px solid #eee; padding-left: 0; padding-right: 0; }
+    .ansbox, .whyrow { break-inside: avoid; }
+    .whyrow { background: none !important; border: 1px solid #ddd; }
+    .stem { font-size: 14pt; }
+    button:not(.choicebtn), input { display: none !important; }
+    button[data-pick] { display: block !important; background: none !important; border: none !important; text-align: left !important; color: #000 !important; padding: 4px 0 !important; margin: 4px 0 !important; box-shadow: none !important; }
+    button[data-pick] .k { font-weight: bold; margin-right: 8px; }
+    .print-only-choices { display: block !important; }
+  }
 </style>
 </head>
 <body>
@@ -421,7 +437,7 @@ function setTab(t) {
   TAB = t;
   $$('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
   $$('section.tabpane').forEach(s => s.classList.toggle('active', s.id === 'pane-' + t));
-  checkUrlParams().then(handled => { if (!handled) render(); });
+  render();
   window.scrollTo(0, 0);
 }
 
@@ -441,12 +457,16 @@ function renderBrand() {
 }
 
 function renderWho() {
-  const el = $('#whoBar');
-  if (!el) return;
-  el.innerHTML = '<label for="soloName">ผู้เรียน</label>' +
-    '<input type="text" id="soloName" style="width:170px" placeholder="ชื่อ-นามสกุล" value="' + esc(DB.profile.name) + '">';
-  $('#soloName').addEventListener('input', e => { DB.profile.name = e.target.value; save(); });
-}
+    const el = $('#whoBar');
+    if (!el) return;
+    if (DB.settings.role === 'teacher') {
+      el.innerHTML = '<span style="font-weight:bold">👨‍🏫 โหมดครูผู้สอน</span> <button class="sm" onclick="logout()">ออกจากระบบ</button>';
+    } else if (DB.settings.role === 'student') {
+      el.innerHTML = '<span style="font-weight:bold">🎓 ' + esc(DB.settings.name) + ' (' + esc(DB.settings.class) + ' เลขที่ ' + esc(DB.settings.no) + ')</span> <button class="sm" onclick="logout()">ออกจากระบบ</button>';
+    } else {
+      el.innerHTML = '<button class="sm primary" onclick="showLogin()">เข้าสู่ระบบ</button>';
+    }
+  }
 
 /* ============================================================================
    ENGINE & FORMATTING
@@ -1799,7 +1819,7 @@ function renderMake() {
     h += '<div class="tablewrap"><table><thead><tr><th>ชื่อชุด</th><th>จำนวนข้อ</th><th>สร้างเมื่อ</th><th></th></tr></thead><tbody>' +
       DB.quizzes.slice().reverse().map(q =>
         '<tr><td><b>' + esc(q.title) + '</b></td><td>' + q.items.length + ' ข้อ</td><td>' + thDateTime(q.ts) + '</td>' +
-        '<td><button class="sm primary" data-start="' + q.id + '">เริ่มทำ</button> ' +
+        '<td><button class="sm primary" data-start="' + q.id + '">เริ่มทำ</button> ' + (DB.settings.role === 'teacher' ? '<button class="sm" data-assign="' + q.id + '" style="background:#059669;color:#fff">ส่งนักเรียน</button> <button class="sm" data-stats="' + q.id + '">📊 สถิติ</button> ' : '') + '<button class="sm" data-print="' + q.id + '">🖨️ พิมพ์</button> ' +
         '<button class="sm danger" data-delq="' + q.id + '">ลบ</button></td></tr>').join('') +
       '</tbody></table></div>';
   }
@@ -1836,6 +1856,9 @@ function renderMake() {
     renderMake();
   });
   $$('[data-start]').forEach(b => b.addEventListener('click', () => startQuiz(b.dataset.start)));
+    $$('[data-print]').forEach(b => b.addEventListener('click', () => printQuiz(b.dataset.print)));
+    $$('[data-assign]').forEach(b => b.addEventListener('click', () => assignQuiz(b.dataset.assign)));
+    $$('[data-stats]').forEach(b => b.addEventListener('click', () => showStats(b.dataset.stats)));
   $$('[data-delq]').forEach(b => b.addEventListener('click', async () => {
     if (!await confirmBox('ลบชุดโจทย์', 'ต้องการลบชุดนี้?', 'ลบ')) return;
     DB.quizzes = DB.quizzes.filter(x => x.id !== b.dataset.delq);
@@ -1843,7 +1866,179 @@ function renderMake() {
   }));
 }
 
-function startQuiz(quizId) {
+
+  function printQuiz(quizId) {
+    const q = DB.quizzes.find(x => x.id === quizId);
+    if (!q) return;
+    const probs = problemsOf(q);
+    let h = '<div style="text-align:center; margin-bottom: 20px;"><h2>' + esc(q.title) + '</h2></div>';
+    probs.forEach((p, i) => {
+      h += '<div class="qbox" style="page-break-inside: avoid; border-bottom: 1px solid #ccc; padding-bottom: 15px; margin-bottom: 15px;">';
+      h += '<b>ข้อ ' + (i+1) + '.</b> ' + problemBody(p);
+      if (p.choices) {
+        h += '<div style="margin-top: 10px; margin-left: 20px;">';
+        p.choices.forEach((ch, k) => {
+          h += '<div style="margin-bottom: 5px;">' + 'กขคง'[k] + '. ' + 
+            (p.theory ? ch.text : M(fmt(ch.value) + (p.finds[0].unit ? ' `' + p.finds[0].unit + '`' : ''))) + '</div>';
+        });
+        h += '</div>';
+      } else if (p.finds) {
+        h += '<div style="margin-top: 10px; margin-left: 20px;"><b>ตอบ:</b> ___________________________</div>';
+      }
+      h += '</div>';
+    });
+    const el = $('#main');
+    el.innerHTML = h;
+    setTimeout(() => window.print(), 500);
+    setTimeout(() => renderMake(), 1500);
+  }
+
+  
+  /* ============================================================================
+     LMS & API SYSTEM
+     ========================================================================== */
+  const API_URL = () => DB.settings.api;
+
+  async function apiCall(action, data) {
+    if (!API_URL()) throw new Error('ยังไม่ได้ตั้งค่า API Web App URL (Settings)');
+    const url = API_URL() + '?action=' + action;
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+      });
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || json.error || 'API Error');
+      return json.data;
+    } catch (e) {
+      toast(e.message, 'bad');
+      throw e;
+    }
+  }
+
+  function logout() {
+    DB.settings.role = null;
+    save(); render();
+  }
+
+  function showLogin() {
+    let h = '<div class="card" style="max-width:400px; margin: 40px auto; padding: 20px;">';
+    h += '<h3 style="text-align:center">เข้าสู่ระบบ</h3>';
+    h += '<div style="margin-bottom:15px"><label>API Endpoint (Google Web App URL):</label><input type="text" id="apiEndpoint" class="grow" style="width:100%; padding:8px" placeholder="https://script.google.com/..." value="' + esc(DB.settings.api || '') + '"></div>';
+    h += '<div style="margin-bottom:15px"><label>โหมดเข้าใช้งาน:</label><select id="loginRole" class="grow" style="width:100%; padding:8px"><option value="student">นักเรียน (สอบ)</option><option value="teacher">ครูผู้สอน (ออกข้อสอบ)</option></select></div>';
+    
+    h += '<div id="studentLoginBox">';
+    h += '<label>เลขประจำตัวนักเรียน:</label><input type="text" id="loginSid" class="grow" style="width:100%; padding:8px; margin-bottom:15px;" placeholder="เช่น 12345">';
+    h += '<button class="primary" style="width:100%" id="btnDoLoginStudent">เข้าสู่ระบบนักเรียน</button>';
+    h += '</div>';
+    
+    h += '<div id="teacherLoginBox" style="display:none">';
+    h += '<label>รหัสผ่านครู:</label><input type="password" id="loginTpass" class="grow" style="width:100%; padding:8px; margin-bottom:15px;">';
+    h += '<button class="primary" style="width:100%" id="btnDoLoginTeacher">เข้าสู่ระบบครู</button>';
+    h += '</div>';
+    h += '</div>';
+    
+    $('#main').innerHTML = h;
+
+    $('#apiEndpoint').addEventListener('input', e => { DB.settings.api = e.target.value; save(); });
+
+    $('#loginRole').addEventListener('change', e => {
+      $('#studentLoginBox').style.display = e.target.value === 'student' ? 'block' : 'none';
+      $('#teacherLoginBox').style.display = e.target.value === 'teacher' ? 'block' : 'none';
+    });
+
+    $('#btnDoLoginTeacher').addEventListener('click', () => {
+      if ($('#loginTpass').value === 'teacher123') {
+        DB.settings.role = 'teacher'; save(); render();
+      } else { toast('รหัสผ่านไม่ถูกต้อง (ใช้ teacher123)', 'bad'); }
+    });
+
+    $('#btnDoLoginStudent').addEventListener('click', async () => {
+      const sid = $('#loginSid').value.trim();
+      if (!sid) return;
+      $('#btnDoLoginStudent').disabled = true;
+      $('#btnDoLoginStudent').innerText = 'กำลังโหลด...';
+      try {
+        const data = await apiCall('login', { studentId: sid });
+        DB.settings.role = 'student';
+        DB.settings.studentId = data.studentId;
+        DB.settings.name = data.name;
+        DB.settings.class = data.class;
+        DB.settings.no = data.no;
+        DB.profile.name = data.name;
+        save();
+        render();
+        toast('ยินดีต้อนรับ ' + data.name, 'ok');
+      } catch (e) {
+        $('#btnDoLoginStudent').disabled = false;
+        $('#btnDoLoginStudent').innerText = 'เข้าสู่ระบบนักเรียน';
+      }
+    });
+  }
+
+  async function assignQuiz(quizId) {
+    const q = DB.quizzes.find(x => x.id === quizId);
+    if (!q) return;
+    const days = prompt('กำหนดส่ง (ใส่จำนวนวันนับจากวันนี้):', '7');
+    if (!days || isNaN(days)) return;
+    try {
+      toast('กำลังส่งข้อมูล...', 'ok');
+      const due = new Date();
+      due.setDate(due.getDate() + parseInt(days));
+      const res = await apiCall('createAssignment', {
+        teacherKey: 'teacher123',
+        quizData: JSON.stringify(q),
+        dueDate: due.toISOString()
+      });
+      const link = window.location.href.split('?')[0] + '?assign=' + res.assignId;
+      prompt('ก๊อปปี้ลิงก์นี้ส่งให้นักเรียน:', link);
+    } catch(e) {}
+  }
+
+  async function showStats(quizId) {
+    const assignId = prompt('ใส่รหัส Assignment ID (ที่ได้ตอนแชร์ลิงก์):', '');
+    if (!assignId) return;
+    try {
+      toast('กำลังโหลดข้อมูล...', 'ok');
+      const data = await apiCall('getAnalytics', { teacherKey: 'teacher123', assignId: assignId });
+      let h = '<div class="card"><h3>สถิติการส่งงาน</h3><table style="width:100%;text-align:left"><tr><th>เลขที่</th><th>ชื่อ</th><th>คะแนน</th><th>เวลาส่ง</th></tr>';
+      data.forEach(r => {
+        h += '<tr><td>' + r.No + '</td><td>' + r.Name + '</td><td>' + r.Score + '</td><td>' + new Date(r.Timestamp).toLocaleString('th-TH') + '</td></tr>';
+      });
+      h += '</table><button class="primary" style="margin-top:20px" onclick="renderMake()">กลับ</button></div>';
+      $('#main').innerHTML = h;
+    } catch(e) {}
+  }
+
+  async function checkUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const assignId = urlParams.get('assign');
+    if (assignId) {
+      if (DB.settings.role !== 'student') {
+        showLogin();
+        toast('กรุณาเข้าสู่ระบบนักเรียนเพื่อทำแบบทดสอบ', 'ok');
+        return true;
+      }
+      try {
+        toast('กำลังโหลดโจทย์...', 'ok');
+        const data = await apiCall('getAssignment', { assignId: assignId });
+        const q = JSON.parse(data.quizData);
+        q.id = 'assign_' + assignId;
+        q.title = 'การบ้าน: ' + q.title;
+        DB.cur = { quizId: q.id, mode: 'do', pIdx: 0, ans: {}, q: q, assignId: assignId, dueDate: data.dueDate };
+        TAB = 'do';
+        render();
+        toast('โหลดการบ้านสำเร็จ', 'ok');
+        return true;
+      } catch(e) {
+        toast('ไม่พบการบ้าน หรือหมดเขตแล้ว', 'bad');
+      }
+    }
+    return false;
+  }
+
+  function startQuiz(quizId) {
   const q = DB.quizzes.find(x => x.id === quizId);
   if (!q) return;
   const who = DB.profile.name || 'ผู้เรียน';
@@ -2075,7 +2270,7 @@ async function restore() {
   if (!f) return;
   try {
     DB = JSON.parse(await f.text());
-    save(); checkUrlParams().then(handled => { if (!handled) render(); });
+    save(); render();
     toast('กู้คืนข้อมูลสำเร็จ', 'ok');
   } catch (e) { toast('ไฟล์ไม่ถูกต้อง', 'bad'); }
 }
