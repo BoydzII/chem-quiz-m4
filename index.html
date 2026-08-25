@@ -2262,6 +2262,7 @@ function renderSetting() {
     '<button id="btnRs">กู้คืนข้อมูล</button></div></div>';
   $('#pane-setting').innerHTML = h;
   $('#setpass').addEventListener('change', e => { DB.settings.passPct = Number(e.target.value) || 60; save(); });
+  $('#setApi').addEventListener('input', e => { DB.settings.api = e.target.value.trim(); save(); });
   $('#btnBk').addEventListener('click', backup);
   $('#btnRs').addEventListener('click', restore);
 }
