@@ -207,6 +207,7 @@ input.numin.bad{border-color:var(--bad);background:var(--bad-bg)}
     .print-only-choices { display: block !important; }
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -449,6 +450,7 @@ function render() {
   if (TAB === 'do')     renderDo();
   if (TAB === 'result') renderResult();
   if (TAB === 'setting') renderSetting();
+    if (TAB === 'students') renderStudents();
 }
 
 function renderBrand() {
@@ -459,12 +461,16 @@ function renderBrand() {
 function renderWho() {
     const el = $('#whoBar');
     if (!el) return;
+    const tabSt = $('#tabStudents');
     if (DB.settings.role === 'teacher') {
       el.innerHTML = '<span style="font-weight:bold">👨‍🏫 โหมดครูผู้สอน</span> <button class="sm" onclick="logout()">ออกจากระบบ</button>';
+      if (tabSt) tabSt.style.display = 'inline-block';
     } else if (DB.settings.role === 'student') {
       el.innerHTML = '<span style="font-weight:bold">🎓 ' + esc(DB.settings.name) + ' (' + esc(DB.settings.class) + ' เลขที่ ' + esc(DB.settings.no) + ')</span> <button class="sm" onclick="logout()">ออกจากระบบ</button>';
+      if (tabSt) tabSt.style.display = 'none';
     } else {
       el.innerHTML = '<button class="sm primary" onclick="showLogin()">เข้าสู่ระบบ</button>';
+      if (tabSt) tabSt.style.display = 'none';
     }
   }
 
@@ -2252,6 +2258,92 @@ function renderResult() {
   h += '</tbody></table></div></div>';
 
   $('#pane-result').innerHTML = h;
+}
+
+
+async function renderStudents() {
+  let h = '<div class="card"><h3>จัดการรายชื่อนักเรียน</h3>';
+  h += '<p class="hint">นำเข้าไฟล์ Excel (.xlsx) ที่มีคอลัมน์: StudentID, Name, Class, No</p>';
+  h += '<input type="file" id="excelFile" accept=".xlsx, .xls, .csv" style="margin-bottom:15px; display:block">';
+  h += '<button class="primary" id="btnImportExcel">นำเข้าข้อมูล</button>';
+  h += '<button id="btnLoadStudents" style="margin-left:10px">รีเฟรชรายชื่อ</button>';
+  h += '<div id="studentTable" style="margin-top:20px"></div>';
+  h += '</div>';
+  
+  $('#pane-students').innerHTML = h;
+  
+  $('#btnLoadStudents').addEventListener('click', loadStudents);
+  $('#btnImportExcel').addEventListener('click', importExcel);
+  
+  loadStudents();
+}
+
+async function loadStudents() {
+  const el = $('#studentTable');
+  el.innerHTML = 'กำลังโหลดข้อมูล...';
+  try {
+    const students = await apiCall('getStudents', { teacherKey: 'teacher123' });
+    if (!students || students.length === 0) {
+      el.innerHTML = '<div class="hint">ยังไม่มีรายชื่อนักเรียนในระบบ</div>';
+      return;
+    }
+    let th = '<div class="tablewrap"><table><thead><tr><th>รหัส</th><th>ชื่อ-สกุล</th><th>ชั้น</th><th>เลขที่</th></tr></thead><tbody>';
+    students.forEach(s => {
+      th += '<tr><td>' + esc(s.StudentID) + '</td><td>' + esc(s.Name) + '</td><td>' + esc(s.Class) + '</td><td>' + esc(s.No) + '</td></tr>';
+    });
+    th += '</tbody></table></div>';
+    th += '<div class="hint" style="margin-top:10px">จำนวนนักเรียนทั้งหมด: ' + students.length + ' คน</div>';
+    el.innerHTML = th;
+  } catch (e) {
+    el.innerHTML = '<div class="hint" style="color:var(--bad)">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>';
+  }
+}
+
+function importExcel() {
+  const fileInput = $('#excelFile');
+  const file = fileInput.files[0];
+  if (!file) {
+    toast('กรุณาเลือกไฟล์ Excel ก่อน', 'bad');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const data = new Uint8Array(e.target.result);
+    try {
+      const workbook = XLSX.read(data, {type: 'array'});
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const json = XLSX.utils.sheet_to_json(worksheet, {raw: false});
+      
+      const studentsList = [];
+      for (let i = 0; i < json.length; i++) {
+        const row = json[i];
+        // handle possible variations in column names
+        const sid = row['StudentID'] || row['studentid'] || row['รหัสนักเรียน'] || row['รหัส'];
+        const name = row['Name'] || row['name'] || row['ชื่อ-สกุล'] || row['ชื่อ'];
+        const cls = row['Class'] || row['class'] || row['ชั้น'] || row['ห้อง'];
+        const no = row['No'] || row['no'] || row['เลขที่'];
+        
+        if (sid && name) {
+          studentsList.push({ studentId: sid, name: name, class: cls || '', no: no || '' });
+        }
+      }
+      
+      if (studentsList.length === 0) {
+        toast('ไม่พบข้อมูลนักเรียน (ตรวจชื่อคอลัมน์ StudentID, Name)', 'bad');
+        return;
+      }
+      
+      toast('กำลังนำเข้า ' + studentsList.length + ' รายการ...', 'ok');
+      const res = await apiCall('importStudents', { teacherKey: 'teacher123', students: studentsList });
+      toast('นำเข้าข้อมูลสำเร็จ ' + res.importedCount + ' รายการ', 'ok');
+      loadStudents();
+    } catch(err) {
+      toast('อ่านไฟล์ผิดพลาด: ' + err.message, 'bad');
+    }
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 function renderSetting() {
