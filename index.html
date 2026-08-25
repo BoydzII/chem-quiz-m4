@@ -1278,12 +1278,19 @@ function renderMake() {
   h += '<div class="card"><h3>1. เลือกบทเรียนเคมี</h3><div class="gridcards">';
   TOPICS.forEach(t => {
     const on = c.topics.indexOf(t.id) >= 0;
-    const nTpl = TPL.filter(x => x.topic === t.id).length;
-    h += '<div class="topiccard"><label class="chk' + (on ? ' on' : '') + '">' +
-      '<input type="checkbox" data-topic="' + t.id + '"' + (on ? ' checked' : '') + '>' +
-      '<span><span class="ch">' + chLabel(t) + '</span><span class="t">' + t.icon + ' ' + esc(t.name) + '</span><br>' +
-      '<span class="d">มี ' + nTpl + ' แม่แบบ</span></span></label>' +
-      '<button class="fxbtn" data-fx="' + t.id + '">📘 สรุปสูตร</button></div>';
+      const tpls = TPL.filter(x => x.topic === t.id);
+      const lvCnts = [];
+      LEVELS.forEach(lv => {
+        const n = tpls.filter(x => x.level === lv).length;
+        if (n > 0) lvCnts.push(lv + ' ' + n);
+      });
+      const dText = lvCnts.length > 0 ? lvCnts.join(' • ') : 'ไม่มีข้อสอบ';
+      
+      h += '<div class="topiccard"><label class="chk' + (on ? ' on' : '') + '">' +
+        '<input type="checkbox" data-topic="' + t.id + '"' + (on ? ' checked' : '') + '>' +
+        '<span><span class="ch">' + chLabel(t) + '</span><span class="t">' + t.icon + ' ' + esc(t.name) + '</span><br>' +
+        '<span class="d" style="font-size:13.5px; opacity:0.8">' + dText + '</span></span></label>' +
+        '<button class="fxbtn" data-fx="' + t.id + '">📘 สรุปสูตร</button></div>';
   });
   h += '</div></div>';
 
