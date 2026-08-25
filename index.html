@@ -1054,7 +1054,7 @@ for (let i = 0; i < 3; i++) {
 }
 for (let i = 0; i < 4; i++) {
   // Mass to Volume STP (ปานกลาง)
-  genMolCalc('ความสัมพันธ์มวล ปริมาตร และโมล', 'ปานกลาง', (R) => {
+  genMolCalc('ความสัมพันธ์มวล ปริมาตร และโมล', 'ยาก', (R) => {
     const s = R.pick([molSubs[1], molSubs[2]]); // แก๊ส
     const m = R.pick([0.5, 1.5, 2]);
     const g = round2(m * s.M);
@@ -1148,7 +1148,7 @@ for (let i = 0; i < 5; i++) {
 }
 for (let i = 0; i < 5; i++) {
   // Mass to Volume STP
-  genStoichCalc('การคำนวณมวลกับปริมาตรแก๊สที่ STP', 'ปานกลาง', (R) => {
+  genStoichCalc('การคำนวณมวลกับปริมาตรแก๊สที่ STP', 'ยาก', (R) => {
     const rxn = R.pick([stoichRxns[0], stoichRxns[2]]);
     const molReact = R.pick([0.25, 0.5, 1.0, 1.5]);
     const massReact = round2(molReact * rxn.rRatio * rxn.rM);
@@ -1287,7 +1287,13 @@ function renderMake() {
   });
   h += '</div></div>';
 
-  h += '<div class="card"><h3>2. สุ่มชุดโจทย์</h3>' +
+  h += '<div class="card"><h3>2. ระบุจำนวนข้อที่ต้องการ</h3><div class="row" style="gap:16px;flex-wrap:wrap">';
+  LEVELS.forEach(lv => {
+    h += '<label class="row" style="gap:6px">' + esc(lv) + ' <input type="number" data-lvl="' + esc(lv) + '" class="numin" style="width:60px;text-align:center" min="0" max="50" value="' + (c.counts[lv] || 0) + '"> ข้อ</label>';
+  });
+  h += '</div></div>';
+
+  h += '<div class="card"><h3>3. สุ่มชุดโจทย์</h3>' +
     '<div class="row"><input type="text" id="qtitle" class="grow" placeholder="ชื่อชุด เช่น แบบฝึกหัดปริมาณสารสัมพันธ์" value="' + esc(c.lastTitle || '') + '">' +
     '<button class="primary" id="btnGen">สุ่มชุดโจทย์</button></div></div>';
 
@@ -1309,6 +1315,11 @@ function renderMake() {
   $$('[data-preset]').forEach(b => b.addEventListener('click', () => runPreset(b.dataset.preset)));
   $$('[data-fx]').forEach(b => b.addEventListener('click', () => showFormulas(Number(b.dataset.fx))));
   $('#btnAllFx').addEventListener('click', showAllFormulas);
+  $$('[data-lvl]').forEach(el => el.addEventListener('change', e => {
+    const lv = e.target.dataset.lvl;
+    c.counts[lv] = Math.max(0, parseInt(e.target.value) || 0);
+    save();
+  }));
   $$('[data-topic]').forEach(cb => cb.addEventListener('change', e => {
     const id = Number(e.target.dataset.topic);
     const i = c.topics.indexOf(id);
