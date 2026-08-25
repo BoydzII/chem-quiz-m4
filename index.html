@@ -1816,6 +1816,11 @@ function renderMake() {
   if (!DB.quizzes.length) {
     h += '<div class="hint">ยังไม่มีชุดโจทย์ ให้กดสุ่มชุดโจทย์ด้านบน</div>';
   } else {
+    if (DB.settings.role === 'teacher') {
+      h += '<div class="card" style="margin-bottom:20px; background:#f0fdf4; border-color:#86efac"><label><b>🔗 ตั้งค่าการเชื่อมต่อฐานข้อมูล (API Endpoint)</b></label><br>';
+      h += '<input type="text" id="apiEndpointTeacher" class="grow" style="width:100%; padding:8px; margin-top:5px" placeholder="https://script.google.com/..." value="' + esc(DB.settings.api || '') + '">';
+      h += '<div class="hint" style="margin-top:5px">นำ Web App URL ที่ได้จาก Google Apps Script มาวางที่นี่ เพื่อให้ระบบส่งการบ้านและเก็บคะแนนได้</div></div>';
+    }
     h += '<div class="tablewrap"><table><thead><tr><th>ชื่อชุด</th><th>จำนวนข้อ</th><th>สร้างเมื่อ</th><th></th></tr></thead><tbody>' +
       DB.quizzes.slice().reverse().map(q =>
         '<tr><td><b>' + esc(q.title) + '</b></td><td>' + q.items.length + ' ข้อ</td><td>' + thDateTime(q.ts) + '</td>' +
@@ -1993,7 +1998,7 @@ function renderMake() {
       });
       const link = window.location.href.split('?')[0] + '?assign=' + res.assignId;
       prompt('ก๊อปปี้ลิงก์นี้ส่งให้นักเรียน:', link);
-    } catch(e) {}
+    } catch(e) { toast('เกิดข้อผิดพลาด: ' + (e.message || ''), 'bad'); }
   }
 
   async function showStats(quizId) {
@@ -2008,7 +2013,7 @@ function renderMake() {
       });
       h += '</table><button class="primary" style="margin-top:20px" onclick="renderMake()">กลับ</button></div>';
       $('#main').innerHTML = h;
-    } catch(e) {}
+    } catch(e) { toast('เกิดข้อผิดพลาด: ' + (e.message || ''), 'bad'); }
   }
 
   async function checkUrlParams() {
