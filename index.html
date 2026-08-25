@@ -104,17 +104,6 @@ tbody tr:last-child td{border-bottom:none}
 .modal .body{padding:16px;overflow:auto;flex:1 1 auto}
 .modal footer{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
 .modal .x{margin-left:auto;background:none;border:none;font-size:24px;line-height:1;padding:0 4px;color:var(--muted);min-height:auto}
-.gate{display:none;position:fixed;inset:0;z-index:150;background:var(--bg); overflow:auto;padding:24px 16px calc(24px + env(safe-area-inset-bottom))}
-.gate .box{max-width:430px;margin:6vh auto;background:var(--panel);border:1px solid var(--line); border-radius:var(--r);padding:22px;box-shadow:0 6px 26px rgba(0,0,0,.09)}
-.gate .glogo{display:block;margin:0 auto 12px;max-height:110px;max-width:150px;object-fit:contain}
-.gate .credit{margin-top:16px;text-align:center;font-size:12px;color:var(--muted);line-height:1.7}
-.gate h2{margin:0 0 4px;font-size:20px}
-.gate .lead{color:var(--muted);font-size:13.5px;margin-bottom:16px;line-height:1.7}
-.gate label.f{display:block;font-size:13px;color:var(--muted);margin:11px 0 4px}
-.gate input{width:100%;font-size:16px}
-.gate .actions{margin-top:16px;display:flex;gap:9px;flex-wrap:wrap}
-.gate .alt{margin-top:15px;padding-top:13px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
-.gate .msg{margin-top:12px}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:200; display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
 .toast{background:#13221b;color:#fff;padding:10px 18px;border-radius:22px; box-shadow:0 8px 24px rgba(0,0,0,.3);font-size:14.5px;animation:tin .2s ease;max-width:88vw;text-align:center}
 .toast.bad{background:var(--bad)} .toast.ok{background:var(--ok)} .toast.warn{background:var(--warn)}
@@ -212,11 +201,10 @@ input.numin.bad{border-color:var(--bad);background:var(--bad-bg)}
   <div class="spacer"></div>
   <button class="sm" id="btnBackup">สำรอง</button>
   <button class="sm" id="btnRestore">กู้คืน</button>
-  <button class="sm" id="btnLogout" style="display:none">ออกจากระบบ</button>
   <div class="savestate" id="saveState"></div>
 </header>
 <nav class="tabs" id="tabs">
-  <button data-tab="make">สร้างชุดโจทย์</button>
+  <button data-tab="make" class="active">สร้างชุดโจทย์</button>
   <button data-tab="do">ทำแบบฝึกหัด</button>
   <button data-tab="result">ผลและวิเคราะห์</button>
   <button data-tab="setting">ตั้งค่า</button>
@@ -225,21 +213,17 @@ input.numin.bad{border-color:var(--bad);background:var(--bad-bg)}
 
 <main>
   <div id="storageWarn"></div>
-  <section class="tabpane" id="pane-make"></section>
+  <section class="tabpane active" id="pane-make"></section>
   <section class="tabpane" id="pane-do"></section>
   <section class="tabpane" id="pane-result"></section>
   <section class="tabpane" id="pane-setting"></section>
 </main>
 
-<div id="gate" class="gate noprint"></div>
 <div id="modal-root"></div>
 <div id="toast"></div>
 
 <script>
 "use strict";
-
-const BUILTIN = {"url":"","studentOnly":true,"lockCloud":false,"logo":"","header":null,"about":null};
-const PRISTINE_HTML = '<!doctype html>\n' + document.documentElement.outerHTML;
 
 const $  = (sel, root) => (root || document).querySelector(sel);
 const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
@@ -339,7 +323,6 @@ function openModal(opts) {
   });
   $('#modal-root').appendChild(bg);
   modalStack.push(bg);
-  if (opts.onMount) opts.onMount(bg, close);
   return { root: bg, close };
 }
 
@@ -359,6 +342,9 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && modalStack.length) { modalStack[modalStack.length - 1].remove(); modalStack.pop(); }
 });
 
+/* ============================================================================
+   STORE
+   ========================================================================== */
 const LS_KEY = 'chemquiz.v1';
 const SUBJECT = 'chemistry';
 
@@ -426,6 +412,44 @@ function save() {
 function curQuiz()   { return DB.quizzes.find(q => q.id === DB.cur.quizId) || null; }
 function curAttempt(){ return DB.attempts.find(a => a.id === DB.cur.attemptId) || null; }
 
+/* ============================================================================
+   TAB CONTROLLER & RENDER
+   ========================================================================== */
+let TAB = 'make';
+
+function setTab(t) {
+  TAB = t;
+  $$('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+  $$('section.tabpane').forEach(s => s.classList.toggle('active', s.id === 'pane-' + t));
+  render();
+  window.scrollTo(0, 0);
+}
+
+function render() {
+  renderBrand();
+  renderWho();
+  if (TAB === 'make')   renderMake();
+  if (TAB === 'do')     renderDo();
+  if (TAB === 'result') renderResult();
+  if (TAB === 'setting') renderSetting();
+}
+
+function renderBrand() {
+  const el = $('#brandBox');
+  if (el) el.innerHTML = '<span class="dot"></span>คลังโจทย์เคมี ม.4';
+}
+
+function renderWho() {
+  const el = $('#whoBar');
+  if (!el) return;
+  el.innerHTML = '<label for="soloName">ผู้เรียน</label>' +
+    '<input type="text" id="soloName" style="width:170px" placeholder="ชื่อ-นามสกุล" value="' + esc(DB.profile.name) + '">';
+  $('#soloName').addEventListener('input', e => { DB.profile.name = e.target.value; save(); });
+}
+
+/* ============================================================================
+   ENGINE & FORMATTING
+   ========================================================================== */
 function mulberry32(a) {
   return function () {
     a |= 0; a = (a + 0x6D2B79F5) | 0;
@@ -681,6 +705,10 @@ function X(text, why) { return { text: text, correct: false, why: why }; }
 function U(v, u) { return M(fmt(v) + (u ? ' `' + u + '`' : '')); }
 function ok2(){ for (const v of arguments) { if (!isFinite(v) || dpOf(v, 4) > 2) return false; } return true; }
 
+/* ----------------------------------------------------------------------------
+   แม่แบบโจทย์เคมี ม.4 (CHEMISTRY TEMPLATES)
+   ---------------------------------------------------------------------------- */
+
 /* แม่แบบที่ 1 (ทฤษฎี): กฎทรงมวลและอัตราส่วนโมลในสมการเคมี */
 TQ({
   id: 'ch-stoich-theory-1', topic: 106, sub: 'ความสัมพันธ์ในสมการเคมี',
@@ -697,6 +725,17 @@ TQ({
         w2Why: 'เป็นการนำอัตราส่วนโมลไปคิดเป็นมวลตรงๆ ซึ่งผิดหลักเคมี',
         w3: 'มวลรวมของสารผลิตภัณฑ์จะน้อยกว่ามวลรวมของสารตั้งต้นเสมอเพราะเป็นก๊าซ',
         w3Why: 'ขัดกับกฎทรงมวล ในระบบปิดมวลรวมต้องเท่าเดิมเสมอ'
+      },
+      {
+        eq: '2H_2(g) + O_2(g) → 2H_2O(l)',
+        correct: 'ก๊าซ `H_2` 2 โมล ทำปฏิกิริยาพอดีกับ `O_2` 1 โมล เกิดน้ำ 2 โมล',
+        cWhy: 'สัมประสิทธิ์แสดงอัตราส่วนโมลของสารตั้งต้นและผลิตภัณฑ์ที่ทำปฏิกิริยาพอดีกัน',
+        w1: 'ก๊าซ `H_2` 2 กรัม ทำปฏิกิริยาพอดีกับ `O_2` 1 กรัม เกิดน้ำ 2 กรัม',
+        w1Why: 'สัมประสิทธิ์หน้าสมการไม่ใช่สัดส่วนมวลกรัม',
+        w2: 'ปริมาตรก๊าซก่อนทำปฏิกิริยารวม 3 ลิตร จะเกิดของเหลวปริมาตร 2 ลิตร',
+        w2Why: 'อัตราส่วนปริมาตรของก๊าซใช้ได้เฉพาะสารที่เป็นก๊าซเท่านั้น (น้ำเป็นของเหลว)',
+        w3: 'ปฏิกิริยานี้มวลของสารตั้งต้นไม่เท่ากับผลิตภัณฑ์',
+        w3Why: 'ตามกฎทรงมวล มวลรวมของระบบก่อนและหลังปฏิกิริยาต้องเท่ากันเสมอ'
       }
     ];
     const item = R.pick(rxns);
@@ -722,7 +761,9 @@ T({
     const subs = [
       { name: 'ก๊าซคาร์บอนไดออกไซด์', f: 'CO_2', M: 44, mC: 12, mO: 16, mult: [0.25, 0.5, 1.5, 2, 2.5, 3] },
       { name: 'น้ำ', f: 'H_2O', M: 18, mH: 1, mO: 16, mult: [0.5, 1.5, 2, 2.5, 3, 4] },
-      { name: 'แคลเซียมคาร์บอเนต', f: 'CaCO_3', M: 100, mCa: 40, mC: 12, mO: 16, mult: [0.1, 0.2, 0.25, 0.5, 1.2, 1.5] }
+      { name: 'แคลเซียมคาร์บอเนต', f: 'CaCO_3', M: 100, mCa: 40, mC: 12, mO: 16, mult: [0.1, 0.2, 0.25, 0.5, 1.2, 1.5] },
+      { name: 'ก๊าซมีเทน', f: 'CH_4', M: 16, mC: 12, mH: 1, mult: [0.25, 0.5, 1.5, 2, 2.5, 4] },
+      { name: 'โซเดียมไฮดรอกไซด์', f: 'NaOH', M: 40, mNa: 23, mO: 16, mH: 1, mult: [0.1, 0.25, 0.5, 1.5, 2, 2.5] }
     ];
     const s = R.pick(subs);
     const n = R.pick(s.mult);
@@ -740,11 +781,12 @@ T({
       finds: [{ s: 'n', unit: 'mol', d: 'จำนวนโมลของสาร', value: n, positive: true }],
       distract: [round2(g * s.M), round2(s.M / g), round2(n * 2), round2(n / 10)],
       sol: {
-        analyze: 'โจทย์ต้องการแปลง<b>มวลในหน่วยกรัม (g)</b> ของ ' + esc(s.name) + ' (' + M(s.f) + ') ให้เป็น<b>จำนวนโมล (mol)</b>',
+        analyze: 'โจทย์ต้องการแปลง<b>มวลในหน่วยกรัม (g)</b> ของ ' + esc(s.name) + ' (' + M(s.f) + ') ให้เป็น<b>จำนวนโมล (mol)</b><br>' +
+          'ใช้สูตรความสัมพันธ์ ' + M('n = frac(g,M)'),
         eqs: [
           { eq: 'n = frac(g,M)', why: 'ความสัมพันธ์ระหว่างมวล (g), มวลโมลาร์ (M) และจำนวนโมล (n)' }
         ],
-        solve: EQ('n = frac(g,M)'),
+        solve: EQ('M ของ ' + s.f + ' = ' + s.M + ' `g/mol`', 'n = frac(g,M)'),
         subst: SEQ('n = frac({g},{M})', { g: g, M: s.M }),
         calc: EQ('n = ' + fmtq(n) + ' `mol`'),
         conclude: 'ดังนั้น <b>' + esc(s.name) + ' ' + U(g, 'g') + ' มีจำนวนโมลเท่ากับ ' + U(n, 'mol') + '</b>'
@@ -767,6 +809,15 @@ T({
         ratio: 1,
         prodM: 44,
         weights: [10, 20, 25, 50, 75, 100, 150]
+      },
+      {
+        eq: '2NaN_3(s) → 2Na(s) + 3N_2(g)',
+        reactName: 'โซเดียมเอไซด์ (NaN_3)',
+        rM: 65,
+        prodName: 'ก๊าซไนโตรเจน (N_2)',
+        ratio: 1.5,
+        prodM: 28,
+        weights: [13, 26, 39, 65, 130]
       }
     ];
 
@@ -795,7 +846,10 @@ T({
         { s: 'V_{STP}', unit: 'dm^3', d: 'ปริมาตรที่ STP', value: volSTP, positive: true }
       ],
       sol: {
-        analyze: 'โจทย์ให้มวลของสารตั้งต้นมา และต้องการหาปริมาณของผลิตภัณฑ์',
+        analyze: 'โจทย์ให้มวลของสารตั้งต้นมา และต้องการหาปริมาณของผลิตภัณฑ์<br>' +
+          '1. แปลงมวลสารตั้งต้นเป็นโมล: ' + M('n = frac(g, M)') + '<br>' +
+          '2. ใช้อัตราส่วนโมลจากสมการเคมี หาโมลผลิตภัณฑ์<br>' +
+          '3. แปลงโมลเป็นมวล (g) และปริมาตรที่ STP (dm<sup>3</sup>)',
         eqs: [
           { eq: 'n_{ตั้งต้น} = frac(g_{ตั้งต้น},M_{ตั้งต้น})', why: 'แปลงมวลสารตั้งต้นเป็นโมล' },
           { eq: 'g_{ผลิตภัณฑ์} = n_{ผลิตภัณฑ์} × M_{ผลิตภัณฑ์}', why: 'หามวลกรัมของผลิตภัณฑ์' },
@@ -854,8 +908,8 @@ function showAllFormulas() {
 }
 
 const PRESETS = [
-  { key: 'concept', icon: '💡', name: 'เช็กความเข้าใจเคมี 10 ข้อ', counts: { 'ทฤษฎี': 10 }, desc: 'โจทย์แนวคิดเคมี ไม่ต้องคำนวณ' },
-  { key: 'mol', icon: '⚖️', name: 'ฝึกคำนวณโมล 10 ข้อ', counts: { 'ง่าย': 5, 'ปานกลาง': 5 }, desc: 'คำนวณโมล มวล มวลโมลาร์' }
+  { key: 'concept', icon: '💡', name: 'เช็กความเข้าใจเคมี 5 ข้อ', counts: { 'ทฤษฎี': 5 }, desc: 'โจทย์แนวคิดเคมี ไม่ต้องคำนวณ' },
+  { key: 'mol', icon: '⚖️', name: 'ฝึกคำนวณโมล 5 ข้อ', counts: { 'ง่าย': 3, 'ปานกลาง': 2 }, desc: 'คำนวณโมล มวล มวลโมลาร์' }
 ];
 
 function runPreset(key) {
@@ -922,14 +976,6 @@ function problemsOf(quiz) {
   const arr = quiz.items.map(it => buildProblem(it.tplId, it.seed));
   PCACHE[key] = arr;
   return arr;
-}
-
-function renderWho() {
-  const el = $('#whoBar');
-  if (!el) return;
-  el.innerHTML = '<label for="soloName">ผู้เรียน</label>' +
-    '<input type="text" id="soloName" style="width:170px" placeholder="ชื่อ-นามสกุล" value="' + esc(DB.profile.name) + '">';
-  $('#soloName').addEventListener('input', e => { DB.profile.name = e.target.value; save(); });
 }
 
 function renderMake() {
