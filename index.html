@@ -1,0 +1,1254 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="เคมี ม.4">
+<meta name="application-name" content="เคมี ม.4">
+<meta name="theme-color" content="#059669">
+<meta name="description" content="คลังโจทย์เคมี ม.4 — สุ่มโจทย์ แสดงวิธีทำ 7 ขั้น ตรวจคำตอบ วิเคราะห์ผู้เรียน และพิมพ์เป็น PDF">
+<link rel="apple-touch-icon" id="linkAppIcon">
+<link rel="icon" id="linkFavicon">
+<title>คลังโจทย์เคมี ม.4</title>
+<style>
+:root{
+  --bg:#f4f7f5; --panel:#ffffff; --panel2:#f8faf9; --ink:#13221b; --muted:#5b6e64;
+  --line:#d5e2da; --line2:#eaf1ed; --brand:#059669; --brand-ink:#ffffff;
+  --ok:#0f8a53; --ok-bg:#e6f6ee; --bad:#c62828; --bad-bg:#fdecec;
+  --warn:#a05a00; --warn-bg:#fff5e2; --group:#0d9488; --group-bg:#ecfdf5;
+  --lv1:#059669; --lv2:#d97706; --lv3:#dc2626;
+  --shadow:0 1px 2px rgba(5,40,25,.06),0 8px 24px rgba(5,40,25,.08);
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0c1410; --panel:#131f19; --panel2:#192922; --ink:#e4ede8; --muted:#879b90;
+    --line:#22362c; --line2:#1c2d25; --brand:#10b981; --brand-ink:#042116;
+    --ok:#34d399; --ok-bg:#0e3323; --bad:#f87171; --bad-bg:#3a1919;
+    --warn:#fbbf24; --warn-bg:#35270d; --group:#2dd4bf; --group-bg:#10352d;
+    --lv1:#34d399; --lv2:#fbbf24; --lv3:#f87171;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Sarabun","Leelawadee UI","Noto Sans Thai","Segoe UI",Tahoma,sans-serif;
+  font-size:16px; line-height:1.6;
+  padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right);
+  -webkit-tap-highlight-color:transparent;
+}
+button,input,select,textarea{font-family:inherit;font-size:16px;color:inherit;touch-action:manipulation}
+.stickytop{position:sticky; top:0; z-index:40; background:var(--bg); padding-top:env(safe-area-inset-top)}
+.topbar{background:var(--panel); border-bottom:1px solid var(--line); padding:8px 14px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; box-shadow:var(--shadow);}
+.brand{font-weight:700; font-size:17px; white-space:nowrap; display:flex; align-items:center; gap:7px}
+.brand .dot{width:10px;height:10px;border-radius:3px;background:var(--brand);display:inline-block}
+.who{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted);flex-wrap:wrap}
+.spacer{flex:1 1 auto}
+.savestate{font-size:12.5px;color:var(--muted);white-space:nowrap;min-width:80px;text-align:right}
+.savestate.on{color:var(--ok)}
+select,input[type=text],input[type=number],textarea{background:var(--panel2); border:1px solid var(--line); border-radius:8px; padding:8px 10px; outline:none; max-width:100%; min-height:40px;}
+select:focus,input:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(5,150,105,.18)}
+button{background:var(--panel2); border:1px solid var(--line); border-radius:8px; padding:9px 14px; cursor:pointer; white-space:nowrap; min-height:44px;}
+button.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:600}
+button.danger{color:var(--bad);border-color:var(--line)}
+button.ghost{background:transparent}
+button.sm{padding:5px 10px;font-size:14px;border-radius:7px;min-height:36px}
+button.sm.on{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:600}
+button:disabled{opacity:.45;cursor:not-allowed}
+@media (hover:hover){
+  button:hover{border-color:var(--brand)}
+  button.primary:hover{filter:brightness(1.08)}
+  button.danger:hover{border-color:var(--bad);background:var(--bad-bg)}
+}
+.tabs{display:flex; gap:2px; padding:0 10px; background:var(--bg); border-bottom:1px solid var(--line); overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{border:none;background:none;border-radius:0;border-bottom:3px solid transparent; padding:11px 13px;color:var(--muted);font-weight:600;min-height:46px;font-size:15px;}
+.tabs button.active{color:var(--brand);border-bottom-color:var(--brand)}
+main{padding:16px 14px 60px; max-width:1180px; margin:0 auto}
+section.tabpane{display:none}
+section.tabpane.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r); padding:14px 16px;box-shadow:var(--shadow);margin-bottom:14px}
+.card>h3{margin:0 0 10px;font-size:16px}
+.card>h3 .sub{font-weight:400;color:var(--muted);font-size:14px;margin-left:6px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grow{flex:1 1 auto}
+.hint{font-size:13.5px;color:var(--muted)}
+.notice{border-radius:var(--r);padding:10px 13px;margin-bottom:12px;font-size:14.5px}
+.notice.bad{background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad)}
+.notice.warn{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn)}
+.notice.info{background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
+.tablewrap{overflow:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:7px 9px;text-align:left;border-bottom:1px solid var(--line2);white-space:nowrap}
+th{background:var(--panel2);position:sticky;top:0;font-weight:600;font-size:13.5px;color:var(--muted);z-index:1}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tbody tr:last-child td{border-bottom:none}
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.stat .v{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.stat .k{font-size:12.5px;color:var(--muted)}
+.bar{height:9px;border-radius:5px;background:var(--line2);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--brand);transition:width .25s}
+.bar.ok>i{background:var(--ok)} .bar.warn>i{background:var(--warn)} .bar.bad>i{background:var(--bad)}
+.tag{display:inline-block;padding:1px 9px;border-radius:20px;font-size:12.5px;font-weight:600; border:1px solid currentColor;white-space:nowrap}
+.tag.l0{color:var(--group)} .tag.l1{color:var(--lv1)} .tag.l2{color:var(--lv2)} .tag.l3{color:var(--lv3)} .tag.t{color:var(--muted);font-weight:400}
+.modal-bg{position:fixed;inset:0;background:rgba(10,16,26,.5);display:flex; align-items:center;justify-content:center;z-index:100;padding:14px}
+.modal{background:var(--panel);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.3); width:100%;max-width:640px;max-height:92vh;display:flex;flex-direction:column}
+.modal header{padding:13px 16px;border-bottom:1px solid var(--line);font-weight:700;display:flex;align-items:center}
+.modal .body{padding:16px;overflow:auto;flex:1 1 auto}
+.modal footer{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.modal .x{margin-left:auto;background:none;border:none;font-size:24px;line-height:1;padding:0 4px;color:var(--muted);min-height:auto}
+.gate{display:none;position:fixed;inset:0;z-index:150;background:var(--bg); overflow:auto;padding:24px 16px calc(24px + env(safe-area-inset-bottom))}
+.gate .box{max-width:430px;margin:6vh auto;background:var(--panel);border:1px solid var(--line); border-radius:var(--r);padding:22px;box-shadow:0 6px 26px rgba(0,0,0,.09)}
+.gate .glogo{display:block;margin:0 auto 12px;max-height:110px;max-width:150px;object-fit:contain}
+.gate .credit{margin-top:16px;text-align:center;font-size:12px;color:var(--muted);line-height:1.7}
+.gate h2{margin:0 0 4px;font-size:20px}
+.gate .lead{color:var(--muted);font-size:13.5px;margin-bottom:16px;line-height:1.7}
+.gate label.f{display:block;font-size:13px;color:var(--muted);margin:11px 0 4px}
+.gate input{width:100%;font-size:16px}
+.gate .actions{margin-top:16px;display:flex;gap:9px;flex-wrap:wrap}
+.gate .alt{margin-top:15px;padding-top:13px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.gate .msg{margin-top:12px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:200; display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:#13221b;color:#fff;padding:10px 18px;border-radius:22px; box-shadow:0 8px 24px rgba(0,0,0,.3);font-size:14.5px;animation:tin .2s ease;max-width:88vw;text-align:center}
+.toast.bad{background:var(--bad)} .toast.ok{background:var(--ok)} .toast.warn{background:var(--warn)}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.qhead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.qno{font-weight:700;font-size:17px}
+.stem{font-size:17px;line-height:1.75;margin:8px 0}
+.fig{margin:14px 0;text-align:center}
+.eq{font-family:"Cambria Math","Times New Roman",Georgia,serif;font-size:18px; font-style:italic;white-space:nowrap;display:inline-block}
+.eq .u{font-style:normal}
+.eqblk{margin:5px 0 5px 8px}
+.eqblk .eq{font-size:18.5px}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle; margin:0 2px;font-style:normal;font-size:.9em;line-height:1.1}
+.frac .fn{padding:0 4px 1px}
+.frac .fd{padding:1px 4px 0;border-top:1.4px solid currentColor}
+.sol{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:12px}
+.solstep{border-bottom:1px solid var(--line2)}
+.solstep:last-child{border-bottom:none}
+.solstep>.h{display:flex;gap:9px;align-items:center;padding:9px 12px;background:var(--panel2); cursor:pointer;font-weight:600;font-size:14.5px;user-select:none}
+.solstep>.h .n{background:var(--brand);color:var(--brand-ink);width:23px;height:23px;border-radius:50%; display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto}
+.solstep>.h .cv{margin-left:auto;color:var(--muted);font-size:13px;font-weight:400}
+.solstep>.b{padding:11px 13px 13px 44px}
+.solstep.closed>.b{display:none}
+.solstep .why{color:var(--muted);font-size:14px;margin-top:3px}
+table.given{width:auto;font-size:15px;border:1px solid var(--line);border-radius:8px}
+table.given td{border-bottom:1px solid var(--line2);padding:5px 11px;white-space:nowrap}
+table.given td.s{font-family:"Cambria Math","Times New Roman",Georgia,serif;font-style:italic; font-size:17px;text-align:right;padding-right:2px}
+table.given td.e{padding:0 3px;color:var(--muted)}
+table.given td.v{font-variant-numeric:tabular-nums;font-weight:600}
+table.given td.d{color:var(--muted);font-size:13.5px}
+.ansbox{margin-top:14px;padding:13px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel2)}
+.ansrow{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.ansrow label{font-size:15px;min-width:150px}
+.ansrow .lab .eq{font-size:17px}
+input.numin{width:150px;text-align:right;font-variant-numeric:tabular-nums;font-size:17px}
+input.numin.ok{border-color:var(--ok);background:var(--ok-bg)}
+input.numin.bad{border-color:var(--bad);background:var(--bad-bg)}
+.unit{color:var(--muted);font-size:15px;min-width:64px}
+.choices{display:grid;gap:9px;grid-template-columns:1fr 1fr}
+@media (max-width:620px){.choices{grid-template-columns:1fr}}
+.choices.txt{grid-template-columns:1fr}
+.choices.txt .choice{align-items:flex-start}
+.choices.txt .choice>span:last-child{white-space:normal;line-height:1.6}
+.whylist{display:flex;flex-direction:column;gap:7px}
+.whyrow{border-left:3px solid var(--line);padding:4px 0 4px 10px;font-size:14.5px}
+.whyrow.ok{border-left-color:var(--ok)} .whyrow.no{border-left-color:var(--bad)}
+.whyrow .wk{font-weight:700;color:var(--muted);margin-right:5px}
+.whyrow .wm{font-weight:700;margin-left:6px;font-size:13px}
+.whyrow.ok .wm{color:var(--ok)} .whyrow.no .wm{color:var(--bad)}
+.whyrow .wd{color:var(--muted);font-size:13.5px;line-height:1.6;margin-top:2px}
+.choice{display:flex;gap:10px;align-items:center;padding:11px 13px;border:1px solid var(--line); border-radius:var(--r);background:var(--panel);cursor:pointer;text-align:left;min-height:52px;width:100%}
+.choice .k{font-weight:700;color:var(--muted);flex:0 0 auto}
+.choice.sel{border-color:var(--brand);box-shadow:0 0 0 3px rgba(5,150,105,.18)}
+.choice.ok{border-color:var(--ok);background:var(--ok-bg)}
+.choice.bad{border-color:var(--bad);background:var(--bad-bg)}
+.verdict{font-weight:700;margin-top:9px}
+.verdict.ok{color:var(--ok)} .verdict.bad{color:var(--bad)}
+.qnav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.qnav button{width:40px;height:40px;min-height:40px;padding:0;border-radius:9px;font-weight:600;font-size:14px}
+.qnav button.cur{border-color:var(--brand);box-shadow:0 0 0 3px rgba(5,150,105,.18)}
+.qnav button.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.qnav button.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.qnav button.half{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.chk{display:flex;gap:9px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line); border-radius:var(--r);background:var(--panel2);cursor:pointer;min-height:44px}
+.chk.on{border-color:var(--brand);background:rgba(5,150,105,.08)}
+.chk input{margin:3px 0 0;width:19px;height:19px;flex:0 0 auto;min-height:auto}
+.chk .t{font-weight:600;font-size:15px}
+.chk .d{font-size:13px;color:var(--muted)}
+.gridcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.topiccard{align-self:start}
+.topiccard .chk{position:relative;flex-direction:column;align-items:stretch;padding-right:38px}
+.topiccard .chk>span{display:block}
+.topiccard .chk input{position:absolute;top:11px;right:11px;margin:0}
+.chk .ch{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.3px; color:var(--brand);background:rgba(5,150,105,.12);border-radius:5px;padding:1px 7px;margin-bottom:5px}
+.fxbtn{margin:6px 0 0 2px;font-size:12.5px;padding:3px 10px;min-height:30px; border-radius:7px;background:transparent;color:var(--muted)}
+@media (hover:hover){.fxbtn:hover{color:var(--brand);border-color:var(--brand)}}
+.presetbtn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left; padding:12px 14px;height:100%;white-space:normal;border-radius:var(--r);background:var(--panel2)}
+.presetbtn .pi{font-size:22px;line-height:1.2}
+.presetbtn .pt{font-weight:700;font-size:15px}
+.presetbtn .pd{font-size:12.5px;color:var(--muted);line-height:1.5}
+.presetbtn:hover{border-color:var(--brand);transform:translateY(-1px)}
+.fxhead{font-weight:700;font-size:15.5px;margin:0 0 8px;padding-bottom:5px;border-bottom:2px solid var(--line)}
+.fxlist{display:flex;flex-direction:column;gap:8px}
+.fxrow{border-left:3px solid var(--brand);padding:2px 0 2px 11px}
+.fxrow .fxe{font-size:16px}
+.fxrow .fxd{font-size:13px;color:var(--muted);line-height:1.55;margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="stickytop noprint">
+<header class="topbar">
+  <div class="brand" id="brandBox"><span class="dot"></span>คลังโจทย์เคมี ม.4</div>
+  <div class="who" id="whoBar"></div>
+  <div class="spacer"></div>
+  <button class="sm" id="btnBackup">สำรอง</button>
+  <button class="sm" id="btnRestore">กู้คืน</button>
+  <button class="sm" id="btnLogout" style="display:none">ออกจากระบบ</button>
+  <div class="savestate" id="saveState"></div>
+</header>
+<nav class="tabs" id="tabs">
+  <button data-tab="make">สร้างชุดโจทย์</button>
+  <button data-tab="do">ทำแบบฝึกหัด</button>
+  <button data-tab="result">ผลและวิเคราะห์</button>
+  <button data-tab="setting">ตั้งค่า</button>
+</nav>
+</div>
+
+<main>
+  <div id="storageWarn"></div>
+  <section class="tabpane" id="pane-make"></section>
+  <section class="tabpane" id="pane-do"></section>
+  <section class="tabpane" id="pane-result"></section>
+  <section class="tabpane" id="pane-setting"></section>
+</main>
+
+<div id="gate" class="gate noprint"></div>
+<div id="modal-root"></div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+
+const BUILTIN = {"url":"","studentOnly":true,"lockCloud":false,"logo":"","header":null,"about":null};
+const PRISTINE_HTML = '<!doctype html>\n' + document.documentElement.outerHTML;
+
+const $  = (sel, root) => (root || document).querySelector(sel);
+const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+function clamp(n, lo, hi) { return n < lo ? lo : n > hi ? hi : n; }
+
+function fmt(n, dp) {
+  if (n == null || !isFinite(n)) return '—';
+  const d = dp == null ? 2 : dp;
+  let s = Math.abs(n - Math.round(n)) < 1e-9 ? String(Math.round(n)) : n.toFixed(d).replace(/0+$/, '').replace(/\.$/, '');
+  const neg = s[0] === '-'; if (neg) s = s.slice(1);
+  const [i, f] = s.split('.');
+  s = i.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (f ? '.' + f : '');
+  return (neg ? '-' : '') + s;
+}
+function fmtq(n, dp) {
+  if (n == null || !isFinite(n)) return '—';
+  const d = dp == null ? 2 : dp;
+  if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+  return n.toFixed(d).replace(/0+$/, '').replace(/\.$/, '');
+}
+function round2(n) { return Math.round(n * 100) / 100; }
+function dpOf(n, max) {
+  const m = max == null ? 6 : max;
+  for (let d = 0; d <= m; d++) if (Math.abs(n - Number(n.toFixed(d))) < 1e-9) return d;
+  return m + 1;
+}
+const THMON = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+function thDate(ts) {
+  const d = new Date(ts);
+  return d.getDate() + ' ' + THMON[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+}
+function thDateTime(ts) {
+  const d = new Date(ts);
+  return thDate(ts) + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+function mmss(sec) {
+  const s = Math.max(0, Math.round(sec));
+  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+}
+
+function toast(msg, kind) {
+  const t = document.createElement('div');
+  t.className = 'toast' + (kind ? ' ' + kind : '');
+  t.textContent = msg;
+  $('#toast').appendChild(t);
+  setTimeout(() => { t.style.transition = 'opacity .3s'; t.style.opacity = '0'; }, 2400);
+  setTimeout(() => t.remove(), 2800);
+}
+
+function download(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+function pickFile(accept) {
+  return new Promise(res => {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = accept || '';
+    inp.style.display = 'none';
+    document.body.appendChild(inp);
+    inp.addEventListener('change', () => { const f = inp.files[0] || null; inp.remove(); res(f); });
+    inp.click();
+  });
+}
+
+let modalStack = [];
+function openModal(opts) {
+  const bg = document.createElement('div');
+  bg.className = 'modal-bg';
+  bg.innerHTML =
+    '<div class="modal"' + (opts.wide ? ' style="max-width:1000px"' : '') + '>' +
+      '<header>' + esc(opts.title) + '<button class="x" data-close>&times;</button></header>' +
+      '<div class="body">' + (opts.bodyHTML || '') + '</div>' +
+      '<footer></footer>' +
+    '</div>';
+  const foot = $('footer', bg);
+  const close = () => { bg.remove(); modalStack = modalStack.filter(x => x !== bg); };
+  (opts.buttons || [{ label: 'ปิด' }]).forEach(b => {
+    const btn = document.createElement('button');
+    btn.textContent = b.label;
+    if (b.cls) btn.className = b.cls;
+    btn.addEventListener('click', () => { if (b.act) b.act(close, bg); else close(); });
+    foot.appendChild(btn);
+  });
+  bg.addEventListener('click', e => {
+    if (e.target === bg || e.target.hasAttribute('data-close')) close();
+  });
+  $('#modal-root').appendChild(bg);
+  modalStack.push(bg);
+  if (opts.onMount) opts.onMount(bg, close);
+  return { root: bg, close };
+}
+
+function confirmBox(title, msg, okLabel) {
+  return new Promise(res => {
+    openModal({
+      title: title,
+      bodyHTML: '<div>' + msg + '</div>',
+      buttons: [
+        { label: 'ยกเลิก', act: c => { c(); res(false); } },
+        { label: okLabel || 'ตกลง', cls: 'primary', act: c => { c(); res(true); } }
+      ]
+    });
+  });
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && modalStack.length) { modalStack[modalStack.length - 1].remove(); modalStack.pop(); }
+});
+
+const LS_KEY = 'chemquiz.v1';
+const SUBJECT = 'chemistry';
+
+const TOPICS = [
+  { id: 101, grade: 4, ch: 1, icon: '🥽', name: 'ความปลอดภัยและทักษะในปฏิบัติการเคมี', short: 'ความปลอดภัย' },
+  { id: 102, grade: 4, ch: 2, icon: '⚛️', name: 'อะตอมและตารางธาตุ', short: 'อะตอม-ตารางธาตุ' },
+  { id: 103, grade: 4, ch: 3, icon: '🔗', name: 'พันธะเคมี', short: 'พันธะเคมี' },
+  { id: 104, grade: 4, ch: 4, icon: '⚖️', name: 'โมลและสูตรเคมี', short: 'โมล-สูตรเคมี' },
+  { id: 105, grade: 4, ch: 5, icon: '🧪', name: 'สารละลาย', short: 'สารละลาย' },
+  { id: 106, grade: 4, ch: 6, icon: '💥', name: 'ปริมาณสารสัมพันธ์', short: 'ปริมาณสารสัมพันธ์' }
+];
+
+const LEVELS = ['ทฤษฎี', 'ง่าย', 'ปานกลาง', 'ยาก'];
+const LEVEL_CLS = { 'ทฤษฎี': 'l0', 'ง่าย': 'l1', 'ปานกลาง': 'l2', 'ยาก': 'l3' };
+const THEORY_LEVEL = 'ทฤษฎี';
+const ALL_TOPIC_IDS = TOPICS.map(t => t.id);
+
+const TOPIC_BY_ID = {};
+TOPICS.forEach(t => { TOPIC_BY_ID[t.id] = t; });
+function topicOf(id) { return TOPIC_BY_ID[id] || null; }
+function chLabel(t) { return !t ? '?' : 'ม.' + t.grade + ' บทที่ ' + t.ch; }
+
+function defaultDB() {
+  return {
+    v: 1,
+    mode: 'solo',
+    profile: { name: '', room: '', no: '', sid: '' },
+    settings: {
+      tolPct: 1,
+      header: { school: 'กลุ่มสาระการเรียนรู้วิทยาศาสตร์และเทคโนโลยี', teacher: '', term: 'ภาคเรียนที่ 1' },
+      passPct: 60
+    },
+    quizzes: [],
+    attempts: [],
+    cur: { quizId: null, attemptId: null, i: 0 }
+  };
+}
+let DB = defaultDB();
+let storageOK = true;
+
+function loadDB() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) {
+      const o = JSON.parse(raw);
+      DB = Object.assign(defaultDB(), o);
+      DB.settings = Object.assign(defaultDB().settings, o.settings || {});
+      DB.profile = Object.assign(defaultDB().profile, o.profile || {});
+      DB.cur = Object.assign(defaultDB().cur, o.cur || {});
+    }
+  } catch (e) {}
+}
+
+function save() {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(DB));
+    const el = $('#saveState');
+    if (el) { el.textContent = 'บันทึกแล้ว'; el.className = 'savestate on'; }
+  } catch (e) {
+    const el = $('#saveState');
+    if (el) { el.textContent = 'บันทึกไม่ได้'; el.className = 'savestate'; }
+  }
+}
+
+function curQuiz()   { return DB.quizzes.find(q => q.id === DB.cur.quizId) || null; }
+function curAttempt(){ return DB.attempts.find(a => a.id === DB.cur.attemptId) || null; }
+
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function rng(seed) {
+  const f = mulberry32(seed >>> 0);
+  const R = {
+    f: f,
+    int: (a, b) => a + Math.floor(f() * (b - a + 1)),
+    pick: arr => arr[Math.floor(f() * arr.length)],
+    shuffle: arr => {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(f() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+      return a;
+    }
+  };
+  return R;
+}
+
+function M(s) {
+  return '<span class="eq">' + mInner(String(s)) + '</span>';
+}
+function mInner(raw, box) {
+  const top = !box;
+  box = box || [];
+  const stash = html => '\u0001' + String.fromCharCode(0xE000 + (box.push(html) - 1)) + '\u0002';
+  let t = String(raw);
+  for (let k = 0; k < 12; k++) {
+    const before = t;
+    t = t.replace(/frac\(([^(),]*),([^(),]*)\)/g, (m, a, b) =>
+      stash('<span class="frac"><span class="fn">' + mInner(a, box) + '</span>' +
+            '<span class="fd">' + mInner(b, box) + '</span></span>'));
+    if (t === before) break;
+  }
+  let h = esc(t);
+  h = h.replace(/\^\{([^}]*)\}/g, (m, a) => '<sup>' + a + '</sup>')
+       .replace(/\^(-?[\w°]+)/g, (m, a) => '<sup>' + a + '</sup>');
+  h = h.replace(/_\{([^}]*)\}/g, (m, a) => '<sub>' + a + '</sub>')
+       .replace(/_(-?\w)/g, (m, a) => '<sub>' + a + '</sub>');
+  h = h.replace(/`([^`]*)`/g, (m, a) => '<span class="u">' + a + '</span>');
+  h = h.replace(/([฀-๿]+(?:\.[฀-๿]+)*\.?)/g, '<span class="u">$1</span>');
+  h = h.replace(/(\d[\d,]*\.?\d*)/g, '<span class="u">$1</span>');
+  h = h.split(/(<[^>]*>)/).map(function (seg, i) {
+    return i % 2 ? seg : seg.replace(/(^|\s)([+\-−×÷=≠≤≥±≈⇒→])(?=\s|$)/g,
+      '$1<span class="u">$2</span>');
+  }).join('');
+  if (!top) return h;
+  for (let k = 0; k < 20 && h.indexOf('\u0001') >= 0; k++)
+    h = h.replace(/\u0001([\uE000-\uF8FF])\u0002/g, (m, c) => box[c.charCodeAt(0) - 0xE000]);
+  return h;
+}
+
+function EQ() {
+  return Array.from(arguments).filter(Boolean).map(s => '<div class="eqblk">' + M(s) + '</div>').join('');
+}
+function S(tmpl, vals, dp) {
+  return String(tmpl).replace(/\{(\w+)\}/g, (m, k) => {
+    if (!(k in vals)) return m;
+    const v = vals[k];
+    return typeof v === 'number' ? fmtq(v, dp == null ? 3 : dp) : String(v);
+  });
+}
+function SEQ(tmpl, vals, dp) { return EQ(S(tmpl, vals, dp)); }
+
+const TPL = [];
+const TPL_BY_ID = {};
+
+function niceProblem(p) {
+  if (!p || !p.finds || !p.finds.length) return false;
+  for (const f of p.finds) {
+    if (typeof f.value !== 'number' || !isFinite(f.value)) return false;
+    if (dpOf(f.value, 4) > 2) return false;
+  }
+  return true;
+}
+
+function buildProblem(tplId, seed) {
+  const tpl = TPL_BY_ID[tplId];
+  if (!tpl) return null;
+  for (let k = 0; k < 400; k++) {
+    const R = rng((seed >>> 0) + k * 7919);
+    let p = null;
+    try { p = tpl.gen(R); } catch (e) { continue; }
+    if (!p) continue;
+    if (tpl.level === THEORY_LEVEL || niceProblem(p)) return finishProblem(p, tpl, seed);
+  }
+  return null;
+}
+
+function finishProblem(p, tpl, seed) {
+  p.tplId = tpl.id; p.seed = seed; p.topic = tpl.topic; p.level = tpl.level;
+  p.sub = tpl.sub; p.skills = tpl.skills || [];
+  if (tpl.level === THEORY_LEVEL) {
+    p.theory = true; p.given = p.given || []; p.finds = p.finds || [];
+    return p;
+  }
+  p.finds.forEach(f => { if (!f.kind || f.kind === 'num') f.value = round2(f.value); });
+  if (tpl.level === 'ง่าย' && p.finds.length === 1) {
+    p.choices = makeChoices(p, rng(((seed >>> 0) ^ 0x5bf03635) >>> 0));
+  }
+  return p;
+}
+
+function makeChoices(p, R) {
+  const ans = round2(p.finds[0].value);
+  const pool = [];
+  const push = v => {
+    if (typeof v !== 'number' || !isFinite(v)) return;
+    const r = round2(v);
+    if (Math.abs(r - ans) < 0.005 || (r <= 0 && p.finds[0].positive) || pool.some(x => Math.abs(x - r) < 0.005)) return;
+    if (dpOf(r, 4) > 2) return;
+    pool.push(r);
+  };
+  (p.distract || []).forEach(push);
+  const gen = [ans * 2, ans / 2, ans + 1, ans - 1, ans * 1.5, ans / 4];
+  for (const v of gen) { if (pool.length >= 6) break; push(v); }
+  const picked = R.shuffle(pool).slice(0, 3);
+  const all = R.shuffle(picked.concat([ans]));
+  return all.map(v => ({ value: v, correct: Math.abs(v - ans) < 0.005 }));
+}
+
+function ansHintHTML(p) {
+  return '<div style="margin-bottom:9px"><b>กรอกคำตอบ</b> <span class="hint">(ตัวเลขทศนิยมไม่เกิน 2 ตำแหน่ง · ไม่ต้องพิมพ์หน่วย)</span></div>';
+}
+function ansTxt(f) { return fmtq(f.value); }
+
+function parseAns(raw) {
+  if (raw == null) return null;
+  let s = String(raw).trim().replace(/,/g, '').replace(/^\+/, '');
+  if (!/^-?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(s)) return null;
+  const v = Number(s);
+  return isFinite(v) ? { v: v } : null;
+}
+function parseNum(raw) { const a = parseAns(raw); return a ? a.v : null; }
+
+function checkAns(raw, f, tolPct) {
+  const a = parseAns(raw);
+  if (!a) return false;
+  const target = f.value;
+  const pct = (tolPct == null ? DB.settings.tolPct : tolPct) / 100;
+  const tol = Math.max(Math.abs(target) * pct, 0.005);
+  return Math.abs(a.v - target) <= tol + 1e-9;
+}
+
+const STEP_TITLES = ['วิเคราะห์โจทย์', 'สิ่งที่โจทย์กำหนด', 'หลักการและสูตรที่ใช้',
+                     'ตั้งสมการและจัดรูป', 'แทนค่า / ดำเนินการ', 'คำนวณ', 'สรุปคำตอบและตรวจสอบ'];
+
+function givenTable(p) {
+  let h = '<table class="given"><tbody>';
+  p.given.forEach(gv => {
+    h += '<tr><td class="s">' + M(gv.s) + '</td><td class="e">=</td>' +
+      '<td class="v">' + (typeof gv.v === 'number' ? fmt(gv.v) : gv.v) + '</td>' +
+      '<td class="d">' + (gv.unit ? esc(gv.unit) : '') + (gv.d ? ' &nbsp;(' + esc(gv.d) + ')' : '') + '</td></tr>';
+  });
+  p.finds.forEach(f => {
+    h += '<tr><td class="s">' + M(f.s) + '</td><td class="e">=</td>' +
+      '<td class="v" style="color:var(--muted)">?</td>' +
+      '<td class="d">' + (f.unit ? esc(f.unit) : '') + (f.d ? ' &nbsp;(' + esc(f.d) + ')' : '') + '</td></tr>';
+  });
+  return h + '</tbody></table>';
+}
+
+function stepBodies(p) {
+  if (p.theory) return [p.idea, choiceWhyHTML(p), p.why];
+  const s = p.sol;
+  const eqHtml = (s.eqs || []).map(e =>
+    '<div>' + EQ(e.eq) + (e.why ? '<div class="why">' + e.why + '</div>' : '') + '</div>').join('');
+  const lines = a => (Array.isArray(a) ? a : [a]).filter(Boolean).join('');
+  return [s.analyze, givenTable(p), eqHtml, lines(s.solve), lines(s.subst), lines(s.calc), s.conclude];
+}
+
+function theorySolutionHTML(p, open) {
+  const rows = [
+    { n: 1, t: 'แนวคิดที่ใช้ตอบ', b: p.idea },
+    { n: 2, t: 'วิเคราะห์ตัวเลือก', b: choiceWhyHTML(p) },
+    { n: 3, t: 'สิ่งที่ต้องจำและนำไปใช้', b: p.why }
+  ];
+  let h = '<div class="sol">';
+  rows.forEach(r => {
+    h += '<div class="solstep' + (open ? '' : ' closed') + '" data-step="' + (r.n - 1) + '">' +
+      '<div class="h"><span class="n">' + r.n + '</span>' + r.t +
+      (open ? '' : '<span class="cv">แตะเพื่อดู</span>') + '</div>' +
+      '<div class="b">' + (r.b || '<span class="hint">—</span>') + '</div></div>';
+  });
+  return h + '</div>';
+}
+
+function choiceWhyHTML(p) {
+  return '<div class="whylist">' + (p.choices || []).map((c, k) =>
+    '<div class="whyrow ' + (c.correct ? 'ok' : 'no') + '">' +
+    '<span class="wk">' + 'กขคง'[k] + '.</span>' +
+    '<span class="wt">' + c.text + '</span>' +
+    '<span class="wm">' + (c.correct ? '✓ ถูก' : '✗ ผิด') + '</span>' +
+    (c.why ? '<div class="wd">' + c.why + '</div>' : '') + '</div>').join('') + '</div>';
+}
+
+function solutionHTML(p, open) {
+  if (p.theory) return theorySolutionHTML(p, open);
+  const b = stepBodies(p);
+  let h = '<div class="sol">';
+  for (let i = 0; i < 7; i++) {
+    h += '<div class="solstep' + (open ? '' : ' closed') + '" data-step="' + i + '">' +
+      '<div class="h"><span class="n">' + (i + 1) + '</span>' + STEP_TITLES[i] +
+      (open ? '' : '<span class="cv">แตะเพื่อดู</span>') + '</div>' +
+      '<div class="b">' + (b[i] || '<span class="hint">—</span>') + '</div></div>';
+  }
+  return h + '</div>';
+}
+
+function bindSolutionToggle(root) {
+  $$('.solstep>.h', root).forEach(h => {
+    h.addEventListener('click', () => {
+      const st = h.parentElement;
+      st.classList.toggle('closed');
+      const cv = $('.cv', h);
+      if (cv) cv.textContent = st.classList.contains('closed') ? 'แตะเพื่อดู' : 'แตะเพื่อซ่อน';
+    });
+  });
+}
+
+function problemHead(p, no) {
+  const t = topicOf(p.topic);
+  return '<div class="qhead">' +
+    (no ? '<span class="qno">ข้อ ' + no + '</span>' : '') +
+    '<span class="tag ' + LEVEL_CLS[p.level] + '">' + p.level + '</span>' +
+    (t ? '<span class="tag t">' + chLabel(t) + ' ' + esc(t.name) + '</span>' : '') +
+    '<span class="tag t">' + esc(p.sub) + '</span>' +
+    '</div>';
+}
+function problemBody(p) {
+  return '<div class="stem">' + p.stem + '</div>';
+}
+
+function T(o) { TPL.push(o); TPL_BY_ID[o.id] = o; }
+function TQ(o) {
+  T({
+    id: o.id, topic: o.topic, sub: o.sub, level: THEORY_LEVEL, skills: o.skills || [],
+    gen(R) {
+      const q = o.gen(R);
+      if (!q || !q.choices || q.choices.length !== 4) return null;
+      q.choices = R.shuffle(q.choices);
+      q.given = []; q.finds = [];
+      return q;
+    }
+  });
+}
+function C(text, why) { return { text: text, correct: true, why: why }; }
+function X(text, why) { return { text: text, correct: false, why: why }; }
+function U(v, u) { return M(fmt(v) + (u ? ' `' + u + '`' : '')); }
+function ok2(){ for (const v of arguments) { if (!isFinite(v) || dpOf(v, 4) > 2) return false; } return true; }
+
+/* แม่แบบที่ 1 (ทฤษฎี): กฎทรงมวลและอัตราส่วนโมลในสมการเคมี */
+TQ({
+  id: 'ch-stoich-theory-1', topic: 106, sub: 'ความสัมพันธ์ในสมการเคมี',
+  skills: ['แปลความหมายสมการเคมี', 'อัตราส่วนโมลและมวล'],
+  gen(R) {
+    const rxns = [
+      {
+        eq: 'N_2(g) + 3H_2(g) → 2NH_3(g)',
+        correct: 'อัตราส่วนโมลของ `N_2 : H_2 : NH_3` ที่ทำปฏิกิริยาพอดีคือ `1 : 3 : 2`',
+        cWhy: 'ตัวเลขสัมประสิทธิ์ข้างหน้าสารในสมการที่ดุลแล้ว หมายถึงอัตราส่วนโดยโมลและอัตราส่วนอนุภาค',
+        w1: 'อัตราส่วนมวลของ `N_2 : H_2` ที่ทำปฏิกิริยาพอดีคือ `1 : 3` กรัม',
+        w1Why: 'สัมประสิทธิ์คืออัตราส่วนโมล ไม่ใช่อัตราส่วนมวล',
+        w2: 'ถ้าใช้ `N_2` 10 กรัม จะต้องใช้ `H_2` 30 กรัม เสมอ',
+        w2Why: 'เป็นการนำอัตราส่วนโมลไปคิดเป็นมวลตรงๆ ซึ่งผิดหลักเคมี',
+        w3: 'มวลรวมของสารผลิตภัณฑ์จะน้อยกว่ามวลรวมของสารตั้งต้นเสมอเพราะเป็นก๊าซ',
+        w3Why: 'ขัดกับกฎทรงมวล ในระบบปิดมวลรวมต้องเท่าเดิมเสมอ'
+      }
+    ];
+    const item = R.pick(rxns);
+    return {
+      stem: 'พิจารณาสมการเคมีที่ดุลแล้วต่อไปนี้: ' + M(item.eq) + '<br>ข้อความใดกล่าวเกี่ยวกับความสัมพันธ์ของปริมาณสารได้<b>ถูกต้อง</b>',
+      choices: [
+        C(item.correct, item.cWhy),
+        X(item.w1, item.w1Why),
+        X(item.w2, item.w2Why),
+        X(item.w3, item.w3Why)
+      ],
+      idea: '<b>สัมประสิทธิ์หน้าสารในสมการเคมีที่ดุลแล้ว</b> บอกถึง <b>อัตราส่วนโดยโมล</b> และ <b>อัตราส่วนจำนวนอนุภาค</b> แต่ <u>ไม่ได้</u> บอกอัตราส่วนโดยมวล (กรัม) โดยตรง',
+      why: '<b>สิ่งที่ต้องจำ:</b> เวลาคำนวณปริมาณสารสัมพันธ์ ต้องแปลงปริมาณสารให้เป็น <b>โมล (Mole)</b> ก่อนเสมอ แล้วจึงเทียบสัดส่วนตามสัมประสิทธิ์'
+    };
+  }
+});
+
+/* แม่แบบที่ 2 (ง่าย - ปรนัย): การคำนวณโมล มวล */
+T({
+  id: 'ch-mol-calc-easy', topic: 104, sub: 'การคำนวณโมลและมวล', level: 'ง่าย',
+  skills: ['คำนวณโมลจากมวล', 'หามวลโมเลกุล (M)', 'ความสัมพันธ์ n = g/M'],
+  gen(R) {
+    const subs = [
+      { name: 'ก๊าซคาร์บอนไดออกไซด์', f: 'CO_2', M: 44, mC: 12, mO: 16, mult: [0.25, 0.5, 1.5, 2, 2.5, 3] },
+      { name: 'น้ำ', f: 'H_2O', M: 18, mH: 1, mO: 16, mult: [0.5, 1.5, 2, 2.5, 3, 4] },
+      { name: 'แคลเซียมคาร์บอเนต', f: 'CaCO_3', M: 100, mCa: 40, mC: 12, mO: 16, mult: [0.1, 0.2, 0.25, 0.5, 1.2, 1.5] }
+    ];
+    const s = R.pick(subs);
+    const n = R.pick(s.mult);
+    const g = round2(n * s.M);
+    if (!ok2(g, n)) return null;
+
+    return {
+      stem: 'สารตัวอย่าง ' + esc(s.name) + ' (' + M(s.f) + ') หนัก ' + U(g, 'g') +
+        ' จะคิดเป็น<b>กี่โมล (mol)</b><br><span class="hint">(กำหนดมวลอะตอม: ' +
+        Object.keys(s).filter(k => k.startsWith('m')).map(k => k.slice(1) + ' = ' + s[k]).join(', ') + ')</span>',
+      given: [
+        { s: 'g', v: g, unit: 'g', d: 'มวลของสารตัวอย่าง' },
+        { s: 'M', v: s.M, unit: 'g/mol', d: 'มวลต่อโมลของ ' + s.f }
+      ],
+      finds: [{ s: 'n', unit: 'mol', d: 'จำนวนโมลของสาร', value: n, positive: true }],
+      distract: [round2(g * s.M), round2(s.M / g), round2(n * 2), round2(n / 10)],
+      sol: {
+        analyze: 'โจทย์ต้องการแปลง<b>มวลในหน่วยกรัม (g)</b> ของ ' + esc(s.name) + ' (' + M(s.f) + ') ให้เป็น<b>จำนวนโมล (mol)</b>',
+        eqs: [
+          { eq: 'n = frac(g,M)', why: 'ความสัมพันธ์ระหว่างมวล (g), มวลโมลาร์ (M) และจำนวนโมล (n)' }
+        ],
+        solve: EQ('n = frac(g,M)'),
+        subst: SEQ('n = frac({g},{M})', { g: g, M: s.M }),
+        calc: EQ('n = ' + fmtq(n) + ' `mol`'),
+        conclude: 'ดังนั้น <b>' + esc(s.name) + ' ' + U(g, 'g') + ' มีจำนวนโมลเท่ากับ ' + U(n, 'mol') + '</b>'
+      }
+    };
+  }
+});
+
+/* แม่แบบที่ 3 (ปานกลาง - เติมคำตอบ): ปริมาณสารสัมพันธ์ในปฏิกิริยาเคมี */
+T({
+  id: 'ch-stoich-reaction-calc', topic: 106, sub: 'การคำนวณจากสมการเคมี', level: 'ปานกลาง',
+  skills: ['ปริมาณสารสัมพันธ์', 'ดุลสมการเคมี', 'ปริมาตรก๊าซที่ STP'],
+  gen(R) {
+    const rxnTypes = [
+      {
+        eq: 'CaCO_3(s) + 2HCl(aq) → CaCl_2(aq) + H_2O(l) + CO_2(g)',
+        reactName: 'แคลเซียมคาร์บอเนต (CaCO_3)',
+        rM: 100,
+        prodName: 'ก๊าซคาร์บอนไดออกไซด์ (CO_2)',
+        ratio: 1,
+        prodM: 44,
+        weights: [10, 20, 25, 50, 75, 100, 150]
+      }
+    ];
+
+    const r = R.pick(rxnTypes);
+    const massIn = R.pick(r.weights);
+    const molIn = massIn / r.rM;
+    const molOut = molIn * r.ratio;
+    const massOut = round2(molOut * r.prodM);
+    const volSTP = round2(molOut * 22.4);
+
+    if (!ok2(molIn, molOut, massOut, volSTP)) return null;
+
+    return {
+      stem: 'เมื่อนำ <b>' + esc(r.reactName) + '</b> จำนวน ' + U(massIn, 'g') +
+        ' มาทำปฏิกิริยาอย่างสมบูรณ์ตามสมการเคมี:<br>' +
+        EQ(r.eq) + '<br>' +
+        '1) จะเกิด <b>' + esc(r.prodName) + '</b> หนักกี่กรัม (g)<br>' +
+        '2) คิดเป็นปริมาตรกี่ลิตร (dm<sup>3</sup>) ที่ STP',
+      given: [
+        { s: 'g_{สารตั้งต้น}', v: massIn, unit: 'g', d: 'มวลของ ' + r.reactName },
+        { s: 'M_{สารตั้งต้น}', v: r.rM, unit: 'g/mol', d: 'มวลโมลาร์สารตั้งต้น' },
+        { s: 'M_{ผลิตภัณฑ์}', v: r.prodM, unit: 'g/mol', d: 'มวลโมลาร์ ' + r.prodName }
+      ],
+      finds: [
+        { s: 'g_{ผลิตภัณฑ์}', unit: 'g', d: 'มวลของ ' + r.prodName, value: massOut, positive: true },
+        { s: 'V_{STP}', unit: 'dm^3', d: 'ปริมาตรที่ STP', value: volSTP, positive: true }
+      ],
+      sol: {
+        analyze: 'โจทย์ให้มวลของสารตั้งต้นมา และต้องการหาปริมาณของผลิตภัณฑ์',
+        eqs: [
+          { eq: 'n_{ตั้งต้น} = frac(g_{ตั้งต้น},M_{ตั้งต้น})', why: 'แปลงมวลสารตั้งต้นเป็นโมล' },
+          { eq: 'g_{ผลิตภัณฑ์} = n_{ผลิตภัณฑ์} × M_{ผลิตภัณฑ์}', why: 'หามวลกรัมของผลิตภัณฑ์' },
+          { eq: 'V_{STP} = n_{ผลิตภัณฑ์} × 22.4 `dm^3/mol`', why: 'ก๊าซ 1 โมล มีปริมาตร 22.4 dm^3 ที่ STP' }
+        ],
+        solve: [
+          '<div><b>ขั้นที่ 1:</b> โมลสารตั้งต้น ' + M('n = frac(' + massIn + ',' + r.rM + ') = ' + fmtq(molIn) + ' mol') + '</div>',
+          '<div><b>ขั้นที่ 2:</b> โมลผลิตภัณฑ์ ' + M('n_{ผลิตภัณฑ์} = ' + fmtq(molOut) + ' mol') + '</div>'
+        ],
+        subst: [
+          SEQ('g_{ผลิตภัณฑ์} = {m} × {M}', { m: molOut, M: r.prodM }),
+          SEQ('V_{STP} = {m} × 22.4', { m: molOut })
+        ],
+        calc: [
+          EQ('g_{ผลิตภัณฑ์} = ' + fmtq(massOut) + ' `g`'),
+          EQ('V_{STP} = ' + fmtq(volSTP) + ' `dm^3`')
+        ],
+        conclude: 'ดังนั้น <b>เกิด ' + esc(r.prodName) + ' หนัก ' + U(massOut, 'g') +
+          ' และมีปริมาตร ' + U(volSTP, 'dm^3') + ' ที่ STP</b>'
+      }
+    };
+  }
+});
+
+const FORMULAS = {
+  104: [{ e: 'n = frac(g,M) = frac(N,6.02 × 10^{23}) = frac(V,22.4)', d: 'n = โมล · g = มวล(g) · M = มวลโมลาร์ · V = dm^3 ที่ STP' }],
+  105: [{ e: 'C = frac(n,V) = frac(g × 1000,M × V(cm^3))', d: 'C = ความเข้มข้นโมลาริตี (mol/dm^3)' }],
+  106: [{ e: 'อัตราส่วนโมล: aA + bB → cC + dD', d: 'frac(n_A,a) = frac(n_B,b) = frac(n_C,c)' }]
+};
+
+function formulaHTML(topicId) {
+  const list = FORMULAS[topicId] || [];
+  if (!list.length) return '<div class="hint">ยังไม่มีสรุปสูตรของบทนี้</div>';
+  return '<div class="fxlist">' + list.map(f =>
+    '<div class="fxrow"><div class="fxe">' + M(f.e) + '</div>' +
+    (f.d ? '<div class="fxd">' + f.d + '</div>' : '') + '</div>').join('') + '</div>';
+}
+
+function showFormulas(topicId) {
+  const t = topicOf(topicId);
+  openModal({
+    title: (t ? (t.icon || '') + ' สรุปสูตร ' + chLabel(t) + ' ' + t.name : 'สรุปสูตร'),
+    bodyHTML: formulaHTML(topicId),
+    buttons: [{ label: 'ปิด' }]
+  });
+}
+
+function showAllFormulas() {
+  openModal({
+    title: '⚗️ สรุปสูตรและหลักการเคมี ม.4',
+    bodyHTML: TOPICS.map(t =>
+      '<div class="fxhead">' + (t.icon || '') + ' ' + chLabel(t) + ' &nbsp;' + esc(t.name) + '</div>' +
+      formulaHTML(t.id)).join('<div style="height:14px"></div>'),
+    buttons: [{ label: 'ปิด' }]
+  });
+}
+
+const PRESETS = [
+  { key: 'concept', icon: '💡', name: 'เช็กความเข้าใจเคมี 10 ข้อ', counts: { 'ทฤษฎี': 10 }, desc: 'โจทย์แนวคิดเคมี ไม่ต้องคำนวณ' },
+  { key: 'mol', icon: '⚖️', name: 'ฝึกคำนวณโมล 10 ข้อ', counts: { 'ง่าย': 5, 'ปานกลาง': 5 }, desc: 'คำนวณโมล มวล มวลโมลาร์' }
+];
+
+function runPreset(key) {
+  const ps = PRESETS.find(p => p.key === key);
+  if (!ps) return;
+  const c = mkCfg();
+  c.topics = ALL_TOPIC_IDS.slice();
+  c.mode = 'mix';
+  c.counts = Object.assign({}, ps.counts);
+  const title = ps.name + ' — ' + thDate(Date.now());
+  c.lastTitle = title;
+  const q = createQuiz({
+    title: title, topics: c.topics, counts: c.counts, kind: 'practice',
+    seed: Math.floor(Math.random() * 2000000000) + 1
+  });
+  if (q.error) { toast(q.error, 'bad'); return; }
+  DB.quizzes.push(q);
+  DB.cur.quizId = q.id;
+  save();
+  toast('สร้าง' + ps.name + 'แล้ว', 'ok');
+  startQuiz(q.id);
+}
+
+function poolFor(topics, level) {
+  return TPL.filter(t => topics.indexOf(t.topic) >= 0 && t.level === level);
+}
+function mkCfg() {
+  if (!DB.settings.make) {
+    DB.settings.make = { topics: ALL_TOPIC_IDS.slice(), mode: 'mix', counts: { 'ทฤษฎี': 2, 'ง่าย': 3, 'ปานกลาง': 3 } };
+  }
+  return DB.settings.make;
+}
+
+function createQuiz(o) {
+  const R = rng(o.seed >>> 0);
+  const items = [];
+  const missing = [];
+  LEVELS.forEach(lv => {
+    const need = o.counts[lv] || 0;
+    if (!need) return;
+    const pool = poolFor(o.topics, lv);
+    if (!pool.length) { missing.push(lv); return; }
+    let bag = R.shuffle(pool);
+    for (let k = 0; k < need; k++) {
+      if (k % pool.length === 0 && k > 0) bag = R.shuffle(pool);
+      const tpl = bag[k % pool.length];
+      items.push({ tplId: tpl.id, seed: R.int(1, 2000000000), level: lv, topic: tpl.topic });
+    }
+  });
+  if (missing.length) return { error: 'โจทย์ระดับ ' + missing.join(', ') + ' ยังมีไม่พอ' };
+  return {
+    id: uid(), ts: Date.now(), title: o.title, seed: o.seed,
+    topics: o.topics.slice(), counts: Object.assign({}, o.counts),
+    kind: o.kind || 'practice',
+    items: items.map(it => ({ tplId: it.tplId, seed: it.seed }))
+  };
+}
+
+const PCACHE = {};
+function problemsOf(quiz) {
+  if (!quiz) return [];
+  const key = quiz.id;
+  if (PCACHE[key]) return PCACHE[key];
+  const arr = quiz.items.map(it => buildProblem(it.tplId, it.seed));
+  PCACHE[key] = arr;
+  return arr;
+}
+
+function renderWho() {
+  const el = $('#whoBar');
+  if (!el) return;
+  el.innerHTML = '<label for="soloName">ผู้เรียน</label>' +
+    '<input type="text" id="soloName" style="width:170px" placeholder="ชื่อ-นามสกุล" value="' + esc(DB.profile.name) + '">';
+  $('#soloName').addEventListener('input', e => { DB.profile.name = e.target.value; save(); });
+}
+
+function renderMake() {
+  const c = mkCfg();
+  let h = '<div class="card"><h3>เริ่มต้นด้วยชุดลัด</h3><div class="gridcards">' +
+    PRESETS.map(p => '<button class="presetbtn" data-preset="' + p.key + '"><span class="pi">' + p.icon + '</span><span class="pt">' + esc(p.name) + '</span><span class="pd">' + esc(p.desc) + '</span></button>').join('') +
+    '</div><div class="row" style="margin-top:11px"><button class="sm" id="btnAllFx">⚗️ ดูสรุปสูตรเคมี ม.4</button></div></div>';
+
+  h += '<div class="card"><h3>1. เลือกบทเรียนเคมี</h3><div class="gridcards">';
+  TOPICS.forEach(t => {
+    const on = c.topics.indexOf(t.id) >= 0;
+    const nTpl = TPL.filter(x => x.topic === t.id).length;
+    h += '<div class="topiccard"><label class="chk' + (on ? ' on' : '') + '">' +
+      '<input type="checkbox" data-topic="' + t.id + '"' + (on ? ' checked' : '') + '>' +
+      '<span><span class="ch">' + chLabel(t) + '</span><span class="t">' + t.icon + ' ' + esc(t.name) + '</span><br>' +
+      '<span class="d">มี ' + nTpl + ' แม่แบบ</span></span></label>' +
+      '<button class="fxbtn" data-fx="' + t.id + '">📘 สรุปสูตร</button></div>';
+  });
+  h += '</div></div>';
+
+  h += '<div class="card"><h3>2. สุ่มชุดโจทย์</h3>' +
+    '<div class="row"><input type="text" id="qtitle" class="grow" placeholder="ชื่อชุด เช่น แบบฝึกหัดปริมาณสารสัมพันธ์" value="' + esc(c.lastTitle || '') + '">' +
+    '<button class="primary" id="btnGen">สุ่มชุดโจทย์</button></div></div>';
+
+  h += '<div class="card"><h3>ชุดโจทย์ที่เคยสร้าง (' + DB.quizzes.length + ' ชุด)</h3>';
+  if (!DB.quizzes.length) {
+    h += '<div class="hint">ยังไม่มีชุดโจทย์ ให้กดสุ่มชุดโจทย์ด้านบน</div>';
+  } else {
+    h += '<div class="tablewrap"><table><thead><tr><th>ชื่อชุด</th><th>จำนวนข้อ</th><th>สร้างเมื่อ</th><th></th></tr></thead><tbody>' +
+      DB.quizzes.slice().reverse().map(q =>
+        '<tr><td><b>' + esc(q.title) + '</b></td><td>' + q.items.length + ' ข้อ</td><td>' + thDateTime(q.ts) + '</td>' +
+        '<td><button class="sm primary" data-start="' + q.id + '">เริ่มทำ</button> ' +
+        '<button class="sm danger" data-delq="' + q.id + '">ลบ</button></td></tr>').join('') +
+      '</tbody></table></div>';
+  }
+  h += '</div>';
+
+  $('#pane-make').innerHTML = h;
+
+  $$('[data-preset]').forEach(b => b.addEventListener('click', () => runPreset(b.dataset.preset)));
+  $$('[data-fx]').forEach(b => b.addEventListener('click', () => showFormulas(Number(b.dataset.fx))));
+  $('#btnAllFx').addEventListener('click', showAllFormulas);
+  $$('[data-topic]').forEach(cb => cb.addEventListener('change', e => {
+    const id = Number(e.target.dataset.topic);
+    const i = c.topics.indexOf(id);
+    if (i >= 0) c.topics.splice(i, 1); else c.topics.push(id);
+    save(); renderMake();
+  }));
+  $('#btnGen').addEventListener('click', () => {
+    const title = ($('#qtitle').value || '').trim() || ('แบบฝึกหัดเคมี ' + thDate(Date.now()));
+    c.lastTitle = title;
+    const q = createQuiz({
+      title: title, topics: c.topics, counts: c.counts, kind: 'practice',
+      seed: Math.floor(Math.random() * 2000000000) + 1
+    });
+    if (q.error) { toast(q.error, 'bad'); return; }
+    DB.quizzes.push(q);
+    DB.cur.quizId = q.id;
+    save();
+    toast('สร้างชุดโจทย์สำเร็จ', 'ok');
+    renderMake();
+  });
+  $$('[data-start]').forEach(b => b.addEventListener('click', () => startQuiz(b.dataset.start)));
+  $$('[data-delq]').forEach(b => b.addEventListener('click', async () => {
+    if (!await confirmBox('ลบชุดโจทย์', 'ต้องการลบชุดนี้?', 'ลบ')) return;
+    DB.quizzes = DB.quizzes.filter(x => x.id !== b.dataset.delq);
+    save(); renderMake();
+  }));
+}
+
+function startQuiz(quizId) {
+  const q = DB.quizzes.find(x => x.id === quizId);
+  if (!q) return;
+  const who = DB.profile.name || 'ผู้เรียน';
+  const a = {
+    id: uid(), quizId: q.id, soloName: who,
+    startedAt: Date.now(), finishedAt: null,
+    answers: q.items.map(() => ({ raw: [], pick: null, checked: false, score: 0, tries: 0, revealed: false, sec: 0 }))
+  };
+  DB.attempts.push(a);
+  DB.cur.quizId = q.id; DB.cur.attemptId = a.id; DB.cur.i = 0;
+  QT.i = -1;
+  save();
+  setTab('do');
+}
+
+const QT = { i: -1, t0: 0 };
+function stampTime() {
+  const a = curAttempt();
+  if (a && QT.i >= 0 && a.answers[QT.i]) a.answers[QT.i].sec += (Date.now() - QT.t0) / 1000;
+  QT.i = -1;
+}
+function gotoQ(i) {
+  const a = curAttempt(); if (!a) return;
+  stampTime();
+  DB.cur.i = clamp(i, 0, a.answers.length - 1);
+  QT.i = DB.cur.i; QT.t0 = Date.now();
+  save(); renderDo();
+}
+
+function renderDo() {
+  const a = curAttempt(), q = curQuiz();
+  if (!a || !q || a.quizId !== q.id) {
+    $('#pane-do').innerHTML = '<div class="card"><h3>ยังไม่ได้เลือกชุดโจทย์</h3>' +
+      '<button class="primary" onclick="setTab(\'make\')">ไปที่แท็บสร้างชุดโจทย์</button></div>';
+    return;
+  }
+  if (a.finishedAt) {
+    $('#pane-do').innerHTML = '<div class="card"><h3>ทำชุดนี้เสร็จแล้ว</h3>' +
+      '<button class="primary" onclick="setTab(\'result\')">ดูผลการประเมิน</button></div>';
+    return;
+  }
+
+  const probs = problemsOf(q);
+  const i = clamp(DB.cur.i, 0, probs.length - 1);
+  const p = probs[i], it = a.answers[i];
+  if (QT.i !== i) { QT.i = i; QT.t0 = Date.now(); }
+
+  const done = a.answers.filter(x => x.checked).length;
+
+  let h = '<div class="card noprint"><div class="row">' +
+    '<div class="grow"><b>' + esc(q.title) + '</b>' +
+    '<div class="hint">ข้อ ' + (i + 1) + ' จาก ' + probs.length + ' · ทำแล้ว ' + done + ' ข้อ</div></div>' +
+    '<button class="sm" id="btnFinish">ส่งคำตอบ / สรุปผล</button></div>' +
+    '<div class="bar" style="margin-top:9px"><i style="width:' + Math.round(done / probs.length * 100) + '%"></i></div>' +
+    '<div class="qnav" style="margin-top:11px">' +
+    a.answers.map((x, k) => {
+      let cls = '';
+      if (x.checked) cls = x.score >= 1 ? 'ok' : 'bad';
+      if (k === i) cls += ' cur';
+      return '<button class="' + cls + '" data-go="' + k + '">' + (k + 1) + '</button>';
+    }).join('') + '</div></div>';
+
+  if (!p) {
+    h += '<div class="card"><div class="notice bad">เกิดข้อผิดพลาดในการโหลดโจทย์ข้อนี้</div></div>';
+    $('#pane-do').innerHTML = h;
+    return;
+  }
+
+  h += '<div class="card">' + problemHead(p, i + 1) + problemBody(p);
+
+  h += '<div class="ansbox">';
+  if (p.choices) {
+    h += '<div class="choices' + (p.theory ? ' txt' : '') + '">';
+    p.choices.forEach((ch, k) => {
+      let cls = 'choice';
+      if (it.pick === k) cls += ' sel';
+      if (it.checked) { if (ch.correct) cls += ' ok'; else if (it.pick === k) cls += ' bad'; }
+      h += '<button class="' + cls + '" data-pick="' + k + '"' + (it.checked ? ' disabled' : '') + '>' +
+        '<span class="k">' + 'กขคง'[k] + '.</span><span>' +
+        (p.theory ? ch.text : M(fmt(ch.value) + (p.finds[0].unit ? ' `' + p.finds[0].unit + '`' : ''))) +
+        '</span></button>';
+    });
+    h += '</div>';
+  } else {
+    h += ansHintHTML(p);
+    p.finds.forEach((f, k) => {
+      const okc = it.checked ? (checkAns(it.raw[k], f) ? ' ok' : ' bad') : '';
+      h += '<div class="ansrow"><label class="lab" for="in' + k + '">' + M(f.s) + ' <span class="hint">' + esc(f.d) + '</span></label>' +
+        '<input type="text" inputmode="decimal" class="numin' + okc +
+        '" id="in' + k + '" data-in="' + k + '" value="' + esc(it.raw[k] == null ? '' : it.raw[k]) + '"' + (it.checked ? ' disabled' : '') + '>' +
+        '<span class="unit">' + esc(f.unit || '') + '</span></div>';
+    });
+  }
+
+  if (it.checked) {
+    const full = it.score >= 1;
+    h += '<div class="verdict ' + (full ? 'ok' : 'bad') + '">' + (full ? '✓ ถูกต้อง' : '✗ ยังไม่ถูกต้อง') + '</div>';
+  } else {
+    h += '<div class="row" style="margin-top:11px"><button class="primary" id="btnCheck">ตรวจคำตอบ</button>' +
+      '<button id="btnReveal">ดูวิธีทำ 7 ขั้น</button></div>';
+  }
+  h += '</div>';
+
+  if (it.checked || it.revealed) {
+    h += '<h3 style="margin:16px 0 6px">วิธีทำอย่างละเอียด (Scaffolding 7 ขั้น)</h3>' + solutionHTML(p, false);
+  }
+
+  h += '<div class="row" style="margin-top:14px">' +
+    '<button id="btnPrev"' + (i === 0 ? ' disabled' : '') + '>← ข้อก่อนหน้า</button>' +
+    '<button id="btnNext"' + (i === probs.length - 1 ? ' disabled' : '') + '>ข้อถัดไป →</button>' +
+    '<div class="grow"></div><span class="hint">เวลาที่ใช้ข้อนี้ ' + mmss(it.sec) + '</span></div>';
+  h += '</div>';
+
+  $('#pane-do').innerHTML = h;
+
+  $$('[data-go]').forEach(b => b.addEventListener('click', () => gotoQ(Number(b.dataset.go))));
+  $('#btnPrev').addEventListener('click', () => gotoQ(i - 1));
+  $('#btnNext').addEventListener('click', () => gotoQ(i + 1));
+  $('#btnFinish').addEventListener('click', finishAttempt);
+  $$('[data-pick]').forEach(b => b.addEventListener('click', () => {
+    it.pick = Number(b.dataset.pick); save(); renderDo();
+  }));
+  $$('[data-in]').forEach(inp => {
+    inp.addEventListener('input', e => { it.raw[Number(e.target.dataset.in)] = e.target.value; save(); });
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); checkCurrent(); } });
+  });
+  const bc = $('#btnCheck'); if (bc) bc.addEventListener('click', checkCurrent);
+  const br = $('#btnReveal'); if (br) br.addEventListener('click', () => {
+    it.revealed = true; save(); renderDo();
+  });
+  bindSolutionToggle($('#pane-do'));
+}
+
+function checkCurrent() {
+  const a = curAttempt(), q = curQuiz(); if (!a || !q) return;
+  const i = DB.cur.i, p = problemsOf(q)[i], it = a.answers[i];
+  if (it.checked) return;
+  let score = 0;
+  if (p.choices) {
+    if (it.pick == null) { toast('กรุณาเลือกคำตอบก่อน', 'bad'); return; }
+    score = p.choices[it.pick].correct ? 1 : 0;
+  } else {
+    let blank = 0, hit = 0;
+    p.finds.forEach((f, k) => {
+      if (parseNum(it.raw[k]) == null) blank++;
+      else if (checkAns(it.raw[k], f)) hit++;
+    });
+    if (blank === p.finds.length) { toast('กรุณากรอกคำตอบก่อน', 'bad'); return; }
+    score = hit / p.finds.length;
+  }
+  it.checked = true; it.tries++;
+  if (it.tries === 1) it.score = score;
+  stampTime(); QT.i = i; QT.t0 = Date.now();
+  save();
+  renderDo();
+  toast(score >= 1 ? 'ยอดเยี่ยม! ตอบถูกต้อง' : 'ยังไม่ถูกต้อง ลองดูเฉลยวิธีทำ 7 ขั้น', score >= 1 ? 'ok' : 'bad');
+}
+
+async function finishAttempt() {
+  const a = curAttempt(); if (!a) return;
+  if (!await confirmBox('ส่งแบบฝึกหัด', 'ต้องการส่งคำตอบและสรุปผลคะแนน?', 'ส่งคำตอบ')) return;
+  stampTime();
+  a.finishedAt = Date.now();
+  save();
+  setTab('result');
+}
+
+function analyze(a) {
+  const q = quizOf(a);
+  const probs = problemsOf(q);
+  const res = { quiz: q, n: probs.length, got: 0, max: probs.length, pct: 0, sec: 0, items: [] };
+  probs.forEach((p, i) => {
+    const it = a.answers[i] || { score: 0, sec: 0 };
+    res.got += it.score || 0;
+    res.sec += it.sec || 0;
+    res.items.push({ i: i, p: p, score: it.score || 0, sec: it.sec || 0 });
+  });
+  res.pct = res.max ? res.got / res.max * 100 : 0;
+  return res;
+}
+
+function renderResult() {
+  const a = curAttempt();
+  if (!a || !a.finishedAt) {
+    $('#pane-result').innerHTML = '<div class="card"><h3>ยังไม่มีผลการทดสอบ</h3>' +
+      '<div class="hint">กรุณาทำแบบฝึกหัดและกดส่งคำตอบก่อน</div></div>';
+    return;
+  }
+  const r = analyze(a);
+  let h = '<div class="card"><h3>ผลการประเมิน — ' + esc(r.quiz.title) + '</h3>' +
+    '<div class="statgrid">' +
+    '<div class="stat"><div class="v">' + fmt(r.got) + ' / ' + r.max + '</div><div class="k">คะแนนที่ได้</div></div>' +
+    '<div class="stat"><div class="v">' + Math.round(r.pct) + '%</div><div class="k">ร้อยละความถูกต้อง</div></div>' +
+    '<div class="stat"><div class="v">' + (r.pct >= DB.settings.passPct ? 'ผ่านเกณฑ์' : 'ไม่ผ่าน') + '</div><div class="k">เกณฑ์ ' + DB.settings.passPct + '%</div></div>' +
+    '<div class="stat"><div class="v">' + mmss(r.sec) + '</div><div class="k">เวลาที่ใช้รวม</div></div>' +
+    '</div></div>';
+
+  h += '<div class="card"><h3>ผลการทำรายข้อ</h3><div class="tablewrap"><table><thead><tr>' +
+    '<th class="num">ข้อ</th><th>หัวข้อ</th><th>ระดับ</th><th>คะแนน</th><th>เวลา</th></tr></thead><tbody>';
+  r.items.forEach(x => {
+    h += '<tr><td class="num">' + (x.i + 1) + '</td><td>' + esc(x.p ? x.p.sub : '—') + '</td>' +
+      '<td>' + (x.p ? x.p.level : '—') + '</td>' +
+      '<td>' + (x.score >= 1 ? '<span style="color:var(--ok)">1.0</span>' : '<span style="color:var(--bad)">0.0</span>') + '</td>' +
+      '<td>' + mmss(x.sec) + '</td></tr>';
+  });
+  h += '</tbody></table></div></div>';
+
+  $('#pane-result').innerHTML = h;
+}
+
+function renderSetting() {
+  let h = '<div class="card"><h3>ตั้งค่าระบบเคมี ม.4</h3>' +
+    '<div class="row"><label class="hint">เกณฑ์คะแนนผ่าน (%):</label>' +
+    '<input type="number" id="setpass" min="0" max="100" value="' + DB.settings.passPct + '" style="width:90px"></div>' +
+    '<div class="row" style="margin-top:14px"><button id="btnBk">สำรองข้อมูล JSON</button>' +
+    '<button id="btnRs">กู้คืนข้อมูล</button></div></div>';
+  $('#pane-setting').innerHTML = h;
+  $('#setpass').addEventListener('change', e => { DB.settings.passPct = Number(e.target.value) || 60; save(); });
+  $('#btnBk').addEventListener('click', backup);
+  $('#btnRs').addEventListener('click', restore);
+}
+
+function backup() {
+  download(new Blob([JSON.stringify(DB, null, 2)], { type: 'application/json' }), 'ChemQuiz_Backup.json');
+  toast('สำรองข้อมูลเรียบร้อย', 'ok');
+}
+async function restore() {
+  const f = await pickFile('.json');
+  if (!f) return;
+  try {
+    DB = JSON.parse(await f.text());
+    save(); render();
+    toast('กู้คืนข้อมูลสำเร็จ', 'ok');
+  } catch (e) { toast('ไฟล์ไม่ถูกต้อง', 'bad'); }
+}
+
+loadDB();
+$$('#tabs button').forEach(b => b.addEventListener('click', () => {
+  if (TAB === 'do') stampTime();
+  setTab(b.dataset.tab);
+}));
+$('#btnBackup').addEventListener('click', backup);
+$('#btnRestore').addEventListener('click', restore);
+
+const a = curAttempt();
+setTab(a && !a.finishedAt ? 'do' : 'make');
+$('#saveState').textContent = 'พร้อมใช้งาน';
+renderBrand();
+</script>
+</body>
+</html>
