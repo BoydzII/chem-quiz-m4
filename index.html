@@ -191,13 +191,14 @@ input.numin.bad{border-color:var(--bad);background:var(--bad-bg)}
 .fxrow .fxe{font-size:16px}
 .fxrow .fxd{font-size:13px;color:var(--muted);line-height:1.55;margin-top:2px}
 
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
   /* PRINT STYLES */
   #printArea { display: none; }
   @media print {
     body { background: #fff; color: #000; padding: 0; margin: 0; }
     header, nav, #main, .floatbtm, .savestate { display: none !important; }
-    #printArea { display: block !important; width: 100%; }
-    #printArea .qbox { page-break-inside: avoid; border-bottom: 1px solid #ddd; margin-bottom: 15px; padding-bottom: 15px; font-family: sans-serif; }
+    #printArea { display: block !important; width: 100%; font-family: 'Sarabun', sans-serif; }
+    #printArea .qbox { page-break-inside: avoid; border-bottom: 1px solid #ddd; margin-bottom: 15px; padding-bottom: 15px; }
     #printArea h2 { text-align: center; margin-bottom: 20px; }
   }
 </style>
@@ -892,7 +893,7 @@ buildBank(102, 'โครงสร้างอะตอมและสมบั�
     why: 'Fr (แฟรนเซียม) มุมซ้ายล่างมีขนาดใหญ่สุด ส่วน F (ฟลูออรีน)/He (ฮีเลียม) มุมขวาบนมีขนาดเล็กสุด'
   },
   {
-    q: 'พลังงานไอออไนเซชันลำดับที่ 1 (`IE_1`) คืออะไร',
+    q: 'พลังงานไอออไนเซชันลำดับที่ 1 (``IE_1``) คืออะไร',
     c: 'พลังงานน้อยที่สุดที่ทำให้อิเล็กตรอนตัวแรกหลุดออกจากอะตอมในสถานะแก๊ส', cw: 'ตามนิยามของการเกิดไอออนบวก A(g) -> A+(g) + e-',
     w1: 'พลังงานที่คายออกมาเมื่ออะตอมในสถานะแก๊สรับอิเล็กตรอน 1 ตัว', w1w: 'นั่นคือนิยามของสัมพรรคภาพอิเล็กตรอน (Electron Affinity, EA)',
     w2: 'พลังงานที่ใช้ในการทำลายพันธะเคมี 1 โมล', w2w: 'นั่นคือพลังงานพันธะ (Bond Energy)',
@@ -982,7 +983,7 @@ buildBank(103, 'พันธะเคมีและการเกิดสา�
     w1: 'HCl', w1w: 'HCl เป็นโมเลกุลมีขั้ว จึงมีแรงดึงดูดระหว่างขั้วด้วย',
     w2: '`H_2O`', w2w: '`H_2O` มีทั้งแรงลอนดอน แรงดึงดูดระหว่างขั้ว และพันธะไฮโดรเจน',
     w3: 'NaCl', w3w: 'NaCl เป็นสารประกอบไอออนิก ยึดเหนี่ยวด้วยพันธะไอออนิก ไม่ใช่แรงลอนดอน',
-    idea: 'โมเลกุลไม่มีขั้ว (Non-polar molecules) เช่น ก๊าซเฉื่อย, ธาตุโมเลกุลคู่ (`H_2`, `N_2`, `O_2`, `Cl_2`) และไฮโดรคาร์บอน (`CH_4`) จะมีแรงลอนดอนอย่างเดียว',
+    idea: 'โมเลกุลไม่มีขั้ว (Non-polar molecules) เช่น ก๊าซเฉื่อย, ธาตุโมเลกุลคู่ (`H_2`, `N_2`, ``O_2``, `Cl_2`) และไฮโดรคาร์บอน (`CH_4`) จะมีแรงลอนดอนอย่างเดียว',
     why: 'แรงลอนดอนมีอยู่ในทุกโมเลกุล แต่จะเป็นแรงเดียวที่มีในโมเลกุลที่ไม่มีขั้ว'
   },
   {
@@ -995,7 +996,7 @@ buildBank(103, 'พันธะเคมีและการเกิดสา�
     why: 'ไอออนที่ควรรู้: `Al^{3+}`, ซัลเฟต `SO_4^{2-}`'
   },
   {
-    q: 'ข้อใดเป็นการเรียกชื่อสารประกอบโคเวเลนต์ `N_2O_5` ได้ถูกต้อง',
+    q: 'ข้อใดเป็นการเรียกชื่อสารประกอบโคเวเลนต์ ``N_2O_5`` ได้ถูกต้อง',
     c: 'ไดไนโตรเจนเพนทอกไซด์ (Dinitrogen pentoxide)', cw: 'บอกจำนวนอะตอมด้วยภาษากรีก: Di = 2, Penta = 5 (ตัด a ออกเป็น pentoxide)',
     w1: 'ไนโตรเจนออกไซด์', w1w: 'โคเวเลนต์ต้องระบุจำนวนอะตอมด้วยคำอุปสรรคกรีกเสมอ',
     w2: 'ไนโตรเจน(V) ออกไซด์', w2w: 'การใช้เลขโรมัน (Stock system) นิยมใช้กับสารประกอบไอออนิกของโลหะแทรนซิชัน',
@@ -1004,7 +1005,7 @@ buildBank(103, 'พันธะเคมีและการเกิดสา�
     why: 'เลขกรีกที่ต้องจำ: mono, di, tri, tetra, penta, hexa, hepta, octa, nona, deca'
   },
   {
-    q: 'พันธะคู่ (Double bond) ในโมเลกุล `O_2` มีการใช้อิเล็กตรอนร่วมกันกี่คู่และกี่ตัว',
+    q: 'พันธะคู่ (Double bond) ในโมเลกุล ``O_2`` มีการใช้อิเล็กตรอนร่วมกันกี่คู่และกี่ตัว',
     c: '2 คู่ (4 ตัว)', cw: 'พันธะ 1 เส้น = อิเล็กตรอน 1 คู่ (2 ตัว), พันธะคู่ 2 เส้น = อิเล็กตรอน 2 คู่ (4 ตัว)',
     w1: '1 คู่ (2 ตัว)', w1w: 'นั่นคือพันธะเดี่ยว (Single bond)',
     w2: '3 คู่ (6 ตัว)', w2w: 'นั่นคือพันธะสาม (Triple bond) เช่นใน `N_2`',
@@ -1138,7 +1139,7 @@ for (let i = 0; i < 5; i++) {
       stem: 'นำสารละลาย ' + M(s) + ' เข้มข้น ' + U(C1, 'M') + ' ปริมาตร ' + U(V1, 'cm^3') + ' มาเติมน้ำจนมีปริมาตรสุทธิ ' + U(V2, 'cm^3') + ' สารละลายที่ได้ใหม่จะมีความเข้มข้นกี่โมลต่อลิตร (M)',
       given: [{s: '`C_1`', v: C1, unit: 'M'}, {s: '`V_1`', v: V1, unit: 'cm^3'}, {s: '`V_2`', v: V2, unit: 'cm^3'}],
       finds: [{s: '`C_2`', unit: 'M', value: C2}], distract: [round2(C2*2), round2((C1*V2)/V1), round2((C1*V1)/(V2-V1))],
-      sol: { analyze: 'การเติมน้ำเจือจาง โมลตัวถูกละลายเท่าเดิม ใช้สมการ ' + M('C_1V_1 = C_2V_2'), eqs: [{eq: 'C_1V_1 = C_2V_2'}],
+      sol: { analyze: 'การเติมน้ำเจือจาง โมลตัวถูกละลายเท่าเดิม ใช้สมการ ' + M('`C_1V_1 = C_2V_2`'), eqs: [{eq: '`C_1V_1 = C_2V_2`'}],
              solve: [], subst: SEQ('{C1} \\times {V1} = `C_2` \\times {V2}', {C1:C1, V1:V1, V2:V2}), calc: EQ('`C_2` = '+C2), conclude: 'ความเข้มข้นใหม่ ' + C2 + ' M' }
     };
   });
@@ -1149,9 +1150,9 @@ function genStoichCalc(sub, lvl, qfn) {
   T({ id: 'tq-106-' + uid(), topic: 106, sub: sub, level: lvl, skills: ['ปริมาณสารสัมพันธ์จากสมการ'], gen: qfn });
 }
 const stoichRxns = [
-  { eq: '`C_3H_8`(g) + 5O_2(g) → 3CO_2(g) + 4H_2O(g)', rM: 44, pM: 44, rName: 'โพรเพน (`C_3H_8`)', pName: '`CO_2`', rRatio: 1, pRatio: 3, atomM: 'C=12, H=1, O=16' },
+  { eq: '`C_3H_8`(g) + 5`O_2`(g) → 3`CO_2`(g) + 4H_2O(g)', rM: 44, pM: 44, rName: 'โพรเพน (`C_3H_8`)', pName: '`CO_2`', rRatio: 1, pRatio: 3, atomM: 'C=12, H=1, O=16' },
   { eq: '`N_2`(g) + 3H_2(g) → 2NH_3(g)', rM: 28, pM: 17, rName: 'ไนโตรเจน (`N_2`)', pName: 'แอมโมเนีย (`NH_3`)', rRatio: 1, pRatio: 2, atomM: 'N=14, H=1' },
-  { eq: '2KClO_3(s) → 2KCl(s) + 3O_2(g)', rM: 122.5, pM: 32, rName: 'โพแทสเซียมคลอเรต (`KClO_3`)', pName: 'แก๊สออกซิเจน (`O_2`)', rRatio: 2, pRatio: 3, atomM: 'K=39, Cl=35.5, O=16' }
+  { eq: '`2KClO_3(s) \rightarrow 2KCl(s) + 3`O_2`(g)`', rM: 122.5, pM: 32, rName: 'โพแทสเซียมคลอเรต (`KClO_3`)', pName: 'แก๊สออกซิเจน (``O_2``)', rRatio: 2, pRatio: 3, atomM: 'K=39, Cl=35.5, O=16' }
 ];
 
 for (let i = 0; i < 5; i++) {
@@ -1290,7 +1291,7 @@ buildBank(102, 'แนวโน้มและการจัดเรียง�
     idea: 'การจัดเรียงระดับพลังงานย่อย (s, p, d, f)', why: 'ธาตุ Transition แถวแรกจะมีเวเลนซ์อิเล็กตรอนตกที่ 4s และ 3d'
   },
   {
-    q: 'ธาตุในหมู่ใดมีค่าพลังงานไอออไนเซชันลำดับที่ 1 (`IE_1`) สูงที่สุดในคาบเดียวกัน',
+    q: 'ธาตุในหมู่ใดมีค่าพลังงานไอออไนเซชันลำดับที่ 1 (``IE_1``) สูงที่สุดในคาบเดียวกัน',
     c: 'หมู่ 8A (แก๊สมีตระกูล)', cw: 'มีการจัดเรียงอิเล็กตรอนครบ 8 (เสถียรมาก)',
     w1: 'หมู่ 1A (โลหะแอลคาไล)', w1w: 'ดึงอิเล็กตรอนออกได้ง่ายที่สุดในคาบ',
     w2: 'หมู่ 7A (แฮโลเจน)', w2w: 'มี IE สูงแต่ยังน้อยกว่าหมู่ 8A',
@@ -1306,7 +1307,7 @@ buildBank(102, 'แนวโน้มและการจัดเรียง�
     idea: 'แนวโน้มขนาดอะตอม', why: 'ขนาดใหญ่ขึ้นเมื่อลงข้างล่าง เล็กลงเมื่อไปทางขวา'
   },
   {
-    q: 'เพราะเหตุใดค่า `IE_2` ของ Na จึงสูงกว่า `IE_1` มากอย่างผิดปกติ',
+    q: 'เพราะเหตุใดค่า `IE_2` ของ Na จึงสูงกว่า ``IE_1`` มากอย่างผิดปกติ',
     c: 'เพราะดึงอิเล็กตรอนออกจากชั้นที่อยู่ลึกกว่าและเสถียร (ครบแปด)', cw: 'Na เสีย 1 ตัวไปแล้วจะเสถียร การดึงตัวที่ 2 จึงต้องใช้พลังงานมหาศาล',
     w1: 'เพราะ Na เป็นโลหะ', w1w: 'โลหะปกติ IE ต่ำ',
     w2: 'เพราะอะตอม Na เล็กลงมาก', w2w: 'อะตอมเล็กลงจริง แต่สาเหตุหลักคือความเสถียรของวงด้านใน',
@@ -1397,11 +1398,11 @@ buildBank(103, 'พันธะเคมีและสมบัติโมล�
     idea: 'สภาพขั้วของโมเลกุล', why: 'โมเลกุลจะไม่มีขั้วเมื่ออะตอมรอบข้างเหมือนกันและรูปร่างสมมาตร (ไม่มีอิเล็กตรอนคู่โดดเดี่ยวบนอะตอมกลาง)'
   },
   {
-    q: 'แรงยึดเหนี่ยวระหว่างโมเลกุลของ `HF` คือแรงใดเป็นหลัก',
+    q: 'แรงยึดเหนี่ยวระหว่างโมเลกุลของ ``HF`` คือแรงใดเป็นหลัก',
     c: 'พันธะไฮโดรเจน', cw: 'เกิดจากการที่ H จับกับ F ซึ่งมีค่า EN สูงมาก',
     w1: 'แรงลอนดอน', w1w: 'มีแรงลอนดอน แต่พันธะไฮโดรเจนเด่นและแรงกว่ามาก',
     w2: 'แรงดึงดูดระหว่างขั้ว', w2w: 'พันธะไฮโดรเจนเป็นแรงดึงดูดระหว่างขั้วชนิดพิเศษที่แข็งแรงกว่า',
-    w3: 'พันธะไอออนิก', w3w: 'HF เป็นสารประกอบโคเวเลนต์',
+    w3: 'พันธะไอออนิก', w3w: '`HF` เป็นสารประกอบโคเวเลนต์',
     idea: 'พันธะไฮโดรเจน', why: 'เกิดเมื่อ H จับกับ F, O, N'
   },
   {
@@ -1754,13 +1755,29 @@ function createQuiz(o) {
     const need = o.counts[lv] || 0;
     if (!need) return;
     const pool = poolFor(o.topics, lv);
-    if (!pool.length) { missing.push(lv); return; }
-    let bag = R.shuffle(pool);
-    for (let k = 0; k < need; k++) {
-      if (k % pool.length === 0 && k > 0) bag = R.shuffle(pool);
-      const tpl = bag[k % pool.length];
-      items.push({ tplId: tpl.id, seed: R.int(1, 2000000000), level: lv, topic: tpl.topic });
-    }
+      if (!pool.length) { missing.push(lv); return; }
+      let bag = R.shuffle(pool);
+      let theoryUsed = new Set();
+      let added = 0;
+      let k = 0;
+      while (added < need) {
+        if (k > 0 && k % pool.length === 0) bag = R.shuffle(pool);
+        const tpl = bag[k % pool.length];
+        k++;
+        if (tpl.level === 'ทฤษฎี') {
+          if (theoryUsed.has(tpl.id)) {
+            let theoryCount = pool.filter(x => x.level === 'ทฤษฎี').length;
+            if (theoryUsed.size >= theoryCount) {
+              if (k > pool.length * 3) break;
+              continue;
+            }
+            continue;
+          }
+          theoryUsed.add(tpl.id);
+        }
+        items.push({ tplId: tpl.id, seed: R.int(1, 2000000000), level: lv, topic: tpl.topic });
+        added++;
+      }
   });
   if (missing.length) return { error: 'โจทย์ระดับ ' + missing.join(', ') + ' ยังมีไม่พอ' };
   return {
@@ -1882,17 +1899,17 @@ function renderMake() {
     const probs = problemsOf(q);
     let h = '<h2>' + esc(q.title) + '</h2>';
     probs.forEach((p, i) => {
-      h += '<div class="qbox">';
-      h += '<b>ข้อ ' + (i+1) + '.</b> ' + problemBody(p);
+      h += '<div class="qbox" style="margin-bottom: 25px; page-break-inside: avoid;">';
+      h += '<div style="display:flex;"><div style="margin-right:8px; font-weight:bold;">' + (i+1) + '.</div><div style="flex:1;">' + problemBody(p) + '</div></div>';
       if (p.choices) {
-        h += '<div style="margin-top: 10px; margin-left: 20px;">';
+        h += '<div style="margin-top: 12px; margin-left: 24px;">';
         p.choices.forEach((ch, k) => {
-          h += '<div style="margin-bottom: 5px;">' + 'กขคง'[k] + '. ' + 
-            (p.theory ? ch.text : M(fmt(ch.value) + (p.finds[0].unit ? ' `' + p.finds[0].unit + '`' : ''))) + '</div>';
+          h += '<div style="margin-bottom: 6px; display:flex;"><div style="width: 20px;">' + 'กขคง'[k] + '.</div><div>' + 
+            (p.theory ? ch.text : M(fmt(ch.value) + (p.finds[0].unit ? ' `' + p.finds[0].unit + '`' : ''))) + '</div></div>';
         });
         h += '</div>';
       } else if (p.finds) {
-        h += '<div style="margin-top: 10px; margin-left: 20px;"><b>ตอบ:</b> ___________________________</div>';
+        h += '<div style="margin-top: 15px; margin-left: 24px;"><b>ตอบ:</b> ___________________________</div>';
       }
       h += '</div>';
     });
@@ -1935,7 +1952,7 @@ function renderMake() {
   function showLogin() {
     let h = '<div class="card" style="max-width:400px; margin: 40px auto; padding: 20px;">';
     h += '<h3 style="text-align:center">เข้าสู่ระบบ</h3>';
-    h += '<div style="margin-bottom:15px"><label>API Endpoint (Google Web App URL):</label><input type="text" id="apiEndpoint" class="grow" style="width:100%; padding:8px" placeholder="https://script.google.com/..." value="' + esc(DB.settings.api || '') + '"></div>';
+    
     h += '<div style="margin-bottom:15px"><label>โหมดเข้าใช้งาน:</label><select id="loginRole" class="grow" style="width:100%; padding:8px"><option value="student">นักเรียน (สอบ)</option><option value="teacher">ครูผู้สอน (ออกข้อสอบ)</option></select></div>';
     
     h += '<div id="studentLoginBox">';
@@ -2265,7 +2282,7 @@ function renderResult() {
 
 async function renderStudents() {
   let h = '<div class="card"><h3>จัดการรายชื่อนักเรียน</h3>';
-  h += '<p class="hint">นำเข้าไฟล์ Excel (.xlsx) ที่มีคอลัมน์: StudentID, Name, Class, No</p>';
+  h += '<p class="hint">นำเข้าไฟล์ Excel (.xlsx) ที่มีคอลัมน์: StudentID, Name, Class, No <a href="#" id="dlStudentTpl" style="margin-left:10px; color:var(--primary); text-decoration:underline;">[ดาวน์โหลดแม่แบบ]</a></p>';
   h += '<input type="file" id="excelFile" accept=".xlsx, .xls, .csv" style="margin-bottom:15px; display:block">';
   h += '<button class="primary" id="btnImportExcel">นำเข้าข้อมูล</button>';
   h += '<button id="btnLoadStudents" style="margin-left:10px">รีเฟรชรายชื่อ</button>';
@@ -2276,6 +2293,12 @@ async function renderStudents() {
   
   $('#btnLoadStudents').addEventListener('click', loadStudents);
   $('#btnImportExcel').addEventListener('click', importExcel);
+  $('#dlStudentTpl').addEventListener('click', (e) => {
+    e.preventDefault();
+    const csv = '\uFEFFStudentID,Name,Class,No\n1001,ด.ช. สมชาย ใจดี,ม.4/1,1\n1002,ด.ญ. สมหญิง รักเรียน,ม.4/1,2';
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    download(blob, 'Student_Template.csv');
+  });
   
   loadStudents();
 }
