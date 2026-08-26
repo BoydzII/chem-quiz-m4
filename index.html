@@ -1900,7 +1900,7 @@ function renderMake() {
     let h = '<h2>' + esc(q.title) + '</h2>';
     probs.forEach((p, i) => {
       h += '<div class="qbox" style="margin-bottom: 25px; page-break-inside: avoid;">';
-      h += '<div style="display:flex;"><div style="margin-right:8px; font-weight:bold;">' + (i+1) + '.</div><div style="flex:1;">' + problemBody(p) + '</div></div>';
+      h += '<div><span style="font-weight:bold; margin-right:8px;">' + (i+1) + '.</span>' + problemBody(p) + '</div>';
       if (p.choices) {
         h += '<div style="margin-top: 12px; margin-left: 24px;">';
         p.choices.forEach((ch, k) => {
@@ -1909,6 +1909,7 @@ function renderMake() {
         });
         h += '</div>';
       } else if (p.finds) {
+        h += '<div style="height: 220px; border-left: 2px dashed #eee; margin-left: 10px; margin-top: 10px;"></div>'; // Space for calculation (6-8 lines)
         h += '<div style="margin-top: 15px; margin-left: 24px;"><b>ตอบ:</b> ___________________________</div>';
       }
       h += '</div>';
