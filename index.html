@@ -499,7 +499,8 @@ function rng(seed) {
   return R;
 }
 
-function M(s) {
+function parseTicks(s) { return (s || "").replace(/`([^`]+)`/g, (m, a) => M(a)); }
+  function M(s) {
   return '<span class="eq">' + mInner(String(s)) + '</span>';
 }
 function mInner(raw, box) {
