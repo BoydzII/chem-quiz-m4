@@ -192,19 +192,13 @@ input.numin.bad{border-color:var(--bad);background:var(--bad-bg)}
 .fxrow .fxd{font-size:13px;color:var(--muted);line-height:1.55;margin-top:2px}
 
   /* PRINT STYLES */
+  #printArea { display: none; }
   @media print {
     body { background: #fff; color: #000; padding: 0; margin: 0; }
-    .nav, #whoBar, .floatbtm, .btn-print, .btn-assign, .card:not(.qbox) { display: none !important; }
-    #main { max-width: 100%; padding: 0; margin: 0; box-shadow: none; border-radius: 0; min-height: auto; }
-    .qbox { page-break-inside: avoid; border: none !important; border-bottom: 1px solid #ddd !important; margin: 0 0 15px 0 !important; padding: 0 0 15px 0 !important; border-radius: 0 !important; background: none !important; }
-    .qhead { background: none; border-bottom: 1px solid #eee; padding-left: 0; padding-right: 0; }
-    .ansbox, .whyrow { break-inside: avoid; }
-    .whyrow { background: none !important; border: 1px solid #ddd; }
-    .stem { font-size: 14pt; }
-    button:not(.choicebtn), input { display: none !important; }
-    button[data-pick] { display: block !important; background: none !important; border: none !important; text-align: left !important; color: #000 !important; padding: 4px 0 !important; margin: 4px 0 !important; box-shadow: none !important; }
-    button[data-pick] .k { font-weight: bold; margin-right: 8px; }
-    .print-only-choices { display: block !important; }
+    header, nav, #main, .floatbtm, .savestate { display: none !important; }
+    #printArea { display: block !important; width: 100%; }
+    #printArea .qbox { page-break-inside: avoid; border-bottom: 1px solid #ddd; margin-bottom: 15px; padding-bottom: 15px; font-family: sans-serif; }
+    #printArea h2 { text-align: center; margin-bottom: 20px; }
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -225,15 +219,18 @@ input.numin.bad{border-color:var(--bad);background:var(--bad-bg)}
   <button data-tab="do">ทำแบบฝึกหัด</button>
   <button data-tab="result">ผลและวิเคราะห์</button>
   <button data-tab="setting">ตั้งค่า</button>
+  <button data-tab="students" id="tabStudents" style="display:none">จัดการนักเรียน</button>
 </nav>
 </div>
 
-<main>
+<div id="printArea"></div>
+  <main>
   <div id="storageWarn"></div>
   <section class="tabpane active" id="pane-make"></section>
   <section class="tabpane" id="pane-do"></section>
   <section class="tabpane" id="pane-result"></section>
   <section class="tabpane" id="pane-setting"></section>
+  <section class="tabpane" id="pane-students"></section>
 </main>
 
 <div id="modal-root"></div>
@@ -1882,9 +1879,9 @@ function renderMake() {
     const q = DB.quizzes.find(x => x.id === quizId);
     if (!q) return;
     const probs = problemsOf(q);
-    let h = '<div style="text-align:center; margin-bottom: 20px;"><h2>' + esc(q.title) + '</h2></div>';
+    let h = '<h2>' + esc(q.title) + '</h2>';
     probs.forEach((p, i) => {
-      h += '<div class="qbox" style="page-break-inside: avoid; border-bottom: 1px solid #ccc; padding-bottom: 15px; margin-bottom: 15px;">';
+      h += '<div class="qbox">';
       h += '<b>ข้อ ' + (i+1) + '.</b> ' + problemBody(p);
       if (p.choices) {
         h += '<div style="margin-top: 10px; margin-left: 20px;">';
@@ -1898,10 +1895,11 @@ function renderMake() {
       }
       h += '</div>';
     });
-    const el = $('#main');
-    el.innerHTML = h;
-    setTimeout(() => window.print(), 500);
-    setTimeout(() => renderMake(), 1500);
+    const el = $('#printArea');
+    if (el) {
+      el.innerHTML = h;
+      setTimeout(() => { window.print(); }, 500);
+    }
   }
 
   
