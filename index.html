@@ -231,6 +231,7 @@ input.numin.bad{border-color:var(--bad);background:var(--bad-bg)}
   <section class="tabpane" id="pane-result"></section>
   <section class="tabpane" id="pane-setting"></section>
   <section class="tabpane" id="pane-students"></section>
+  <section class="tabpane" id="pane-login"></section>
 </main>
 
 <div id="modal-root"></div>
@@ -1928,7 +1929,7 @@ function renderMake() {
 
   function logout() {
     DB.settings.role = null;
-    save(); render();
+    save(); setTab('make');
   }
 
   function showLogin() {
@@ -1948,7 +1949,9 @@ function renderMake() {
     h += '</div>';
     h += '</div>';
     
-    $('#main').innerHTML = h;
+    $$('.tabpane').forEach(el => el.classList.remove('active'));
+    $('#pane-login').classList.add('active');
+    $('#pane-login').innerHTML = h;
 
     $('#apiEndpoint').addEventListener('input', e => { DB.settings.api = e.target.value; save(); });
 
@@ -1959,7 +1962,7 @@ function renderMake() {
 
     $('#btnDoLoginTeacher').addEventListener('click', () => {
       if ($('#loginTpass').value === 'teacher123') {
-        DB.settings.role = 'teacher'; save(); render();
+        DB.settings.role = 'teacher'; save(); setTab(TAB || 'make');
       } else { toast('รหัสผ่านไม่ถูกต้อง (ใช้ teacher123)', 'bad'); }
     });
 
@@ -1975,9 +1978,8 @@ function renderMake() {
         DB.settings.name = data.name;
         DB.settings.class = data.class;
         DB.settings.no = data.no;
-        DB.profile.name = data.name;
-        save();
-        render();
+          DB.profile.name = data.name;
+          save(); setTab(TAB || 'make');
         toast('ยินดีต้อนรับ ' + data.name, 'ok');
       } catch (e) {
         $('#btnDoLoginStudent').disabled = false;
@@ -2016,7 +2018,9 @@ function renderMake() {
         h += '<tr><td>' + r.No + '</td><td>' + r.Name + '</td><td>' + r.Score + '</td><td>' + new Date(r.Timestamp).toLocaleString('th-TH') + '</td></tr>';
       });
       h += '</table><button class="primary" style="margin-top:20px" onclick="renderMake()">กลับ</button></div>';
-      $('#main').innerHTML = h;
+      $$('.tabpane').forEach(el => el.classList.remove('active'));
+    $('#pane-login').classList.add('active');
+    $('#pane-login').innerHTML = h;
     } catch(e) { toast('เกิดข้อผิดพลาด: ' + (e.message || ''), 'bad'); }
   }
 
