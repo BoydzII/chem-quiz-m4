@@ -198,7 +198,7 @@ input.numin.bad{border-color:var(--bad);background:var(--bad-bg)}
     body { background: #fff; color: #000; padding: 0; margin: 0; }
     header, nav, main, .floatbtm, .savestate { display: none !important; }
     #printArea { display: block !important; width: 100%; font-family: 'Sarabun', sans-serif; }
-    #printArea .qbox { page-break-inside: avoid; border-bottom: 1px solid #ddd; margin-bottom: 15px; padding-bottom: 15px; }
+    
     #printArea h2 { text-align: center; margin-bottom: 20px; }
   }
 </style>
@@ -1900,17 +1900,17 @@ function renderMake() {
     const probs = problemsOf(q);
     let h = '<h2>' + esc(q.title) + '</h2>';
     probs.forEach((p, i) => {
-      h += '<div class="qbox" style="margin-bottom: 25px; page-break-inside: avoid;">';
+      h += '<div class="qbox" style="margin-bottom: 15px; padding-bottom: 12px; page-break-inside: avoid; border-bottom: 1px dashed #ccc;">';
       h += '<div style="display:flex; align-items:baseline;"><div style="font-weight:bold; margin-right:8px; white-space:nowrap;">' + (i+1) + '.</div><div style="flex:1;">' + problemBody(p) + '</div></div>';
       if (p.choices) {
-        h += '<div style="margin-top: 12px; margin-left: 24px;">';
+        h += '<div style="margin-top: 8px; margin-left: 24px;">';
         p.choices.forEach((ch, k) => {
-          h += '<div style="margin-bottom: 6px; display:flex;"><div style="width: 20px;">' + 'กขคง'[k] + '.</div><div>' + 
+          h += '<div style="margin-bottom: 4px; display:flex;"><div style="width: 20px;">' + 'กขคง'[k] + '.</div><div>' + 
             (p.theory ? ch.text : M(fmt(ch.value) + (p.finds[0].unit ? ' `' + p.finds[0].unit + '`' : ''))) + '</div></div>';
         });
         h += '</div>';
       } else if (p.finds) {
-        h += '<div style="height: 220px; border-left: 2px dashed #eee; margin-left: 10px; margin-top: 10px;"></div>'; // Space for calculation (6-8 lines)
+        h += '<div style="height: 220px; border-left: 2px dashed #eee; margin-left: 10px; margin-top: 10px;"></div>'; // Space for calculation
         h += '<div style="margin-top: 15px; margin-left: 24px;"><b>ตอบ:</b> ___________________________</div>';
       }
       h += '</div>';
